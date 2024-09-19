@@ -85,9 +85,23 @@ if(empty($err))
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    
-
     <title>BookNook-Login</title>
+    <style>
+        .forgot-password {
+    text-align: center;
+    margin-top: 15px; /* Adds space between the input and the link */
+}
+
+.forgot-password a {
+    color: black; /* Sets the text color to black */
+    text-decoration: none; /* Removes the underline */
+    font-size: 14px; /* Adjusts font size if needed */
+}
+
+.forgot-password a:hover {
+    text-decoration: underline; /* Underline on hover for better UX */
+}
+    </style>
 </head>
 <body>
     <div class="wrapper-right">
