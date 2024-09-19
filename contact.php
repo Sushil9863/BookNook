@@ -23,7 +23,7 @@ if(!isset($user_id)){
    if(mysqli_num_rows($select_message) > 0){
       $message[] = 'message sent already!';
    }else{
-      mysqli_query($conn, "INSERT INTO `message`(id, name, email, number, message) VALUES('$user_id', '$name', '$email', '$number', '$msg')") or die('query failed');
+      mysqli_query($conn, "INSERT INTO `message`(user_id, name, email, number, message) VALUES('$user_id', '$name', '$email', '$number', '$msg')") or die('query failed');
       $message[] = 'message sent successfully!';
    }
 

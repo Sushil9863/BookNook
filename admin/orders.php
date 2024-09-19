@@ -22,7 +22,7 @@ if(isset($_POST['update_genre'])){
   $update_g_id = $_POST['update_g_id'];
   $update_status = $_POST['update_status'];
 
-  mysqli_query($conn, "UPDATE `orders` SET payment_status = '$update_status' WHERE id = '$update_g_id'") or die('query failed');
+  mysqli_query($conn, "UPDATE orders SET payment_status = '$update_status' WHERE id = '$update_g_id'") or die('query failed');
 
 
   header('location:orders.php');
@@ -31,7 +31,7 @@ if(isset($_POST['update_genre'])){
 
 if(isset($_GET['delete'])){
   $delete_id = $_GET['delete'];
-  mysqli_query($conn, "DELETE FROM `orders` WHERE id = '$delete_id'") or die('query failed');
+  mysqli_query($conn, "DELETE FROM orders WHERE id = '$delete_id'") or die('query failed');
   header('location:orders.php');
 }
 
@@ -160,7 +160,7 @@ if(isset($_GET['delete'])){
 <div class="box-container">
 
    <?php
-      $select_genres = mysqli_query($conn, "SELECT * FROM `orders` where payment_status = 'Pending'") or die('query failed');
+      $select_genres = mysqli_query($conn, "SELECT * FROM orders where payment_status = 'Pending'") or die('query failed');
       if(mysqli_num_rows($select_genres) > 0){
          while($fetch_genres = mysqli_fetch_assoc($select_genres)){
    ?>
@@ -187,7 +187,7 @@ if(isset($_GET['delete'])){
    <?php
       if(isset($_GET['update'])){
          $update_id = $_GET['update'];
-         $update_query = mysqli_query($conn, "SELECT * FROM `orders` WHERE id = '$update_id'") or die('query failed');
+         $update_query = mysqli_query($conn, "SELECT * FROM orders WHERE id = '$update_id'") or die('query failed');
          if(mysqli_num_rows($update_query) > 0){
             while($fetch_update = mysqli_fetch_assoc($update_query)){
    ?>

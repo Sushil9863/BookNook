@@ -17,7 +17,9 @@ if(isset($_POST['add_product'])) {
   $name = mysqli_real_escape_string($conn, $_POST['name']);
   $price = $_POST['price'];
   $author_id = $_POST['author'];
+  $stock = $_POST['stock'];
   $image = $_FILES['image']['name'];
+  $genre = $_POST['genre'];
   $image_size = $_FILES['image']['size'];
   $image_tmp_name = $_FILES['image']['tmp_name'];
   $image_folder = '../uploaded_img/'.$image;
@@ -27,7 +29,7 @@ if(isset($_POST['add_product'])) {
   if(mysqli_num_rows($select_product_name) > 0) {
      $message[] = 'product name already added';
   } else {
-     $add_product_query = mysqli_query($conn, "INSERT INTO `products`(name, price, author_id, image) VALUES('$name', '$price', '$author_id', '$image')") or die('query failed');
+     $add_product_query = mysqli_query($conn, "INSERT INTO `products`(name, genre, price, author_id, image, stock) VALUES('$name','$genre', '$price', '$author_id', '$image', '$stock')") or die('query failed');
 
      if($add_product_query) {
         if($image_size > 2000000) {
@@ -47,8 +49,9 @@ if(isset($_POST['update_product'])) {
   $update_name = $_POST['update_name'];
   $update_price = $_POST['update_price'];
   $update_author_id = $_POST['update_author'];
+  $update_stock = $_POST['update_stock'];
 
-  mysqli_query($conn, "UPDATE `products` SET name = '$update_name', price = '$update_price', author_id = '$update_author_id' WHERE id = '$update_p_id'") or die('query failed');
+  mysqli_query($conn, "UPDATE `products` SET name = '$update_name', price = '$update_price', author_id = '$update_author_id', stocks = '$update_stock' WHERE id = '$update_p_id'") or die('query failed');
 
   $update_image = $_FILES['update_image']['name'];
   $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
@@ -186,7 +189,6 @@ if(isset($_GET['delete'])) {
     <h1 class="title">Shop Books</h1>
     <form action="" method="post" enctype="multipart/form-data">
       <h3>Add Books</h3>
-      <label for="name">Enter Name:</label>
       <input type="text" name="name" class="box" placeholder="Enter Book Name" required>
       <input type="number" min="150" name="price" class="box" placeholder="Enter Book Price" required>
       <select name="author" class="box" required>
@@ -217,6 +219,7 @@ if(isset($_GET['delete'])) {
               ?>
             </select>
       <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
+      <input type="number" name="stock" class="box" placeholder="Enter Book Stock" min="0" required>
       <input type="submit" value="Add Books" name="add_product" class="btn">
     </form>
   </section>
@@ -285,6 +288,8 @@ if(isset($_GET['delete'])) {
               ?>
             </select>
             <input type="file" class="box" name="update_image" accept="image/jpg, image/jpeg, image/png">
+            <input type="number" name="update_stock" value="<?php echo $fetch_update['stocks']; ?>" class="box" required placeholder="Enter book stock">
+
             <input type="submit" value="Update" name="update_product" class="option-btn btn-primary">
             <input type="reset" value="Cancel" id="close-update" class="option-btn" onclick="location.href = 'books.php'">
           </form>

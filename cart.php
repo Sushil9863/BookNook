@@ -11,17 +11,18 @@ if(!isset($user_id)){
 }
 
 if(isset($_POST['update_cart'])){
-   $cart_id = $_POST['cart_id'];
+   $cart_id = $_POST['cart_id']; // Use the cart item ID, not user ID
    $cart_quantity = $_POST['cart_quantity'];
-   mysqli_query($conn, "UPDATE `cart` SET quantity = '$cart_quantity' WHERE user_id = '$cart_id'") or die('query failed');
-   $message[] = 'cart quantity updated!';
+   mysqli_query($conn, "UPDATE `cart` SET quantity = '$cart_quantity' WHERE id = '$cart_id'") or die('query failed');
+   $message[] = 'Cart quantity updated!';
 }
 
 if(isset($_GET['delete'])){
-   $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$delete_id'") or die('query failed');
+   $delete_id = $_GET['delete']; // Use cart item ID, not user ID
+   mysqli_query($conn, "DELETE FROM `cart` WHERE id = '$delete_id'") or die('query failed');
    header('location:cart.php');
 }
+
 
 if(isset($_GET['delete_all'])){
    mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
@@ -55,7 +56,6 @@ if(isset($_GET['delete_all'])){
 </div>
 
 <section class="shopping-cart">
-
    <h1 class="title">Products Added</h1>
 
    <div class="box-container">
@@ -66,12 +66,14 @@ if(isset($_GET['delete_all'])){
             while($fetch_cart = mysqli_fetch_assoc($select_cart)){   
       ?>
       <div class="box">
-         <a href="cart.php?delete=<?php echo $fetch_cart['user_id']; ?>" class="fas fa-times" onclick="return confirm('delete this from cart?');"></a>
+         <!-- Use cart item ID instead of user ID for delete link -->
+         <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times" onclick="return confirm('delete this from cart?');"></a>
          <img src="./uploaded_img/<?php echo $fetch_cart['image']; ?>" alt="">
          <div class="name"><?php echo $fetch_cart['name']; ?></div>
          <div class="price">Rs.<?php echo $fetch_cart['price']; ?>/-</div>
          <form action="" method="post">
-            <input type="hidden" name="cart_id" value="<?php echo $fetch_cart['user_id']; ?>">
+            <!-- Pass the cart item ID in the form for updating quantity -->
+            <input type="hidden" name="cart_id" value="<?php echo $fetch_cart['id']; ?>">
             <input type="number" min="1" name="cart_quantity" value="<?php echo $fetch_cart['quantity']; ?>">
             <input type="submit" name="update_cart" value="update" class="option-btn">
          </form>
@@ -85,6 +87,7 @@ if(isset($_GET['delete_all'])){
       }
       ?>
    </div>
+
 
    <div style="margin-top: 2rem; text-align:center;">
       <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from cart?');">delete all</a>
