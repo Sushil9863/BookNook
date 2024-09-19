@@ -9,6 +9,7 @@ session_start();
 // if(!isset($user_id)){
 //    header('location:login.php');
 // }
+$select_authors = mysqli_query($conn, "SELECT * FROM `authors`") or die('Query failed');
 
 ?>
 
@@ -149,76 +150,32 @@ session_start();
 
    <div class="box-container">
 
-      <div class="box">
-         <img src="images/author-1.jpg" alt="">
-         <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
-            <a href="#" class="fa-brands fa-wikipedia-w"></a>
+      <?php
+      // Check if there are authors in the database
+      if(mysqli_num_rows($select_authors) > 0){
+         // Loop through each author and display their details
+         while($row = mysqli_fetch_assoc($select_authors)){
+      ?>
+         <div class="box">
+            <img src="uploaded_img/<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+            <div class="share">
+               <a href="#" class="fab fa-facebook-f"></a>
+               <a href="#" class="fab fa-twitter"></a>
+               <a href="#" class="fab fa-instagram"></a>
+               <a href="#" class="fa-brands fa-wikipedia-w"></a>
+            </div>
+            <h3><?php echo $row['name']; ?></h3>
          </div>
-         <h3>Amar Neupane</h3>
-      </div>
-
-      <div class="box">
-         <img src="images/author-2.jpg" alt="">
-         <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
-            <a href="#" class="fa-brands fa-wikipedia-w"></a>
-         </div>
-         <h3>Chetan Bhagat</h3>
-      </div>
-
-      <div class="box">
-         <img src="images/author-3.jpg" alt="">
-         <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a> 
-            <a href="#" class="fa-brands fa-wikipedia-w"></a>
-         </div>
-         <h3>Jhamak Kumari Ghimire</h3>
-      </div>
-
-      <div class="box">
-         <img src="images/author-4.jpg" alt="">
-         <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
-            <a href="#" class="fa-brands fa-wikipedia-w"></a>
-         </div>
-         <h3>Laxmi Prasad Devkota</h3>
-      </div>
-
-      <div class="box">
-         <img src="images/author-5.jpg" alt="">
-         <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
-            <a href="#" class="fa-brands fa-wikipedia-w"></a>
-         </div>
-         <h3>William Shakespeare </h3>
-      </div>
-
-      <div class="box">
-         <img src="images/author-6.jpg" alt="">
-         <div class="share">
-            <a href="https://www.facebook.com/hari.bamsha.acharya" class="fab fa-facebook-f"></a>
-            <a href="https://www.youtube.com/@MahaSanchar?sub_confirmation=1 " class="fa-brands fa-youtube"></a>
-            <a href="https://www.instagram.com/hari_bansha_acharya/" class="fab fa-instagram"></a>
-            <a href="https://en.wikipedia.org/wiki/Hari_Bansha_Acharya" class="fa-brands fa-wikipedia-w"></a>
-         </div>
-         <h3>Hari Bansha Acharya</h3>
-      </div>
+      <?php
+         }
+      } else {
+         echo '<p class="empty">No authors found!</p>';
+      }
+      ?>
 
    </div>
 
 </section>
-
 
 
 
