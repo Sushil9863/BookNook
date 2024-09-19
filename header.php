@@ -46,7 +46,18 @@ if(isset($message)){
          <div class="icons">
             <div id="menu-btn" class="fas fa-bars"></div>
             <a href="search_page.php" class="fas fa-search"></a>
-            <a href="logout.php" id="log-out-btn" class="fa-solid fa-arrow-right-from-bracket"></a>
+            <?php
+            if (isset($_SESSION['id'])) {
+            echo '<a href="logout.php" id="log-out-btn" class="fa-solid fa-arrow-right-from-bracket" title="Log Out"></a>';
+         } else {
+            echo '<a href="login.php" id="log-in-btn" class="fa-solid fa-arrow-right-to-bracket" title="Log In"></a>';
+         }
+?>
+            
+
+
+
+
             <?php
             if (isset($_SESSION['id'])) {
                $user_id = $_SESSION['id'];
@@ -60,8 +71,9 @@ if(isset($message)){
                <span>(<?php echo $cart_rows_number; ?>)</span> 
                </a>
             <?php endif; ?>
-         </div>
 
+
+         </div>
          <div class="user-box">
             <p>username : <span><?php echo $_SESSION['username']; ?></span></p>
             <a href="logout.php" class="delete-btn">logout</a>

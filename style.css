@@ -122,6 +122,20 @@ form{
     z-index: 2;
 }
 
+.forgot-password {
+    text-align: center;
+    margin-top: 15px; /* Adds space between the input and the link */
+}
+
+.forgot-password a {
+    color: black; /* Sets the text color to black */
+    text-decoration: none; /* Removes the underline */
+    font-size: 14px; /* Adjusts font size if needed */
+}
+
+.forgot-password a:hover {
+    text-decoration: underline; /* Underline on hover for better UX */
+}
 
 
 select{

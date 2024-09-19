@@ -76,14 +76,6 @@ if(empty($err))
 
 
 ?>
-
-
-
-
-
-
-
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -127,6 +119,9 @@ if(empty($err))
                         <input type="password" name="password" id="password" placeholder="Password">
                         <ion-icon name="lock-closed-outline"></ion-icon>
                     </div>
+                    <div class="forgot-password">
+                    <a href="forgot-password.php">Forgot Password?</a>
+                </div>
                 </div>
                 <input type="submit" value="Login" class="login-btn">
             </form>

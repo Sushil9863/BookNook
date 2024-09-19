@@ -16,8 +16,9 @@ if(isset($_POST['order_btn'])){
    $number = $_POST['number'];
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    $method = mysqli_real_escape_string($conn, $_POST['method']);
-   $address = mysqli_real_escape_string($conn, 'address 1 '. $_POST['road'].', '. $_POST['street'].', '. $_POST['city'].', '. $_POST['district']);
+   $address = mysqli_real_escape_string($conn, '  '. $_POST['city'].', '. $_POST['district']);
    $placed_on = date('d-M-Y');
+   $payment_status = "pending";
 
    $cart_total = 0;
    $cart_products[] = '';
@@ -41,7 +42,7 @@ if(isset($_POST['order_btn'])){
       if(mysqli_num_rows($order_query) > 0){
         $message[] = 'order already placed!'; 
       }else{
-         mysqli_query($conn, "INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on) VALUES('$user_id', '$name', '$number', '$email', '$method', '$address', '$total_products', '$cart_total', '$placed_on')") or die('query failed');
+         mysqli_query($conn, "INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on , payment_status) VALUES('$user_id', '$name', '$number', '$email', '$method', '$address', '$total_products', '$cart_total', '$placed_on' ,'$payment_status')") or die('query failed');
          $message[] = 'order placed successfully!';
          mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
       }
@@ -98,48 +99,83 @@ if(isset($_POST['order_btn'])){
 
 <section class="checkout">
 
-   <form action="" method="post">
-      <h3>place your order</h3>
-      <div class="flex">
-         <div class="inputBox">
+<form action="" method="post" onsubmit="return validateForm()">
+    <h3>place your order</h3>
+    <div class="flex">
+        <div class="inputBox">
             <span>Your Name :</span>
-            <input type="text" name="name" required placeholder="Enter your Name">
-         </div>
-         <div class="inputBox">
+            <input type="text" name="name" id="name" required placeholder="Enter your Name">
+        </div>
+        <div class="inputBox">
             <span>Your Number :</span>
-            <input type="number" name="number" required placeholder="Enter your Number">
-         </div>
-         <div class="inputBox">
+            <input type="number" name="number" id="number" required placeholder="Enter your Number">
+        </div>
+        <div class="inputBox">
             <span>Your E-mail :</span>
-            <input type="email" name="email" required placeholder="Enter your email">
-         </div>
-         <div class="inputBox">
+            <input type="email" name="email" id="email" required placeholder="Enter your email">
+        </div>
+        <div class="inputBox">
             <span>Payment Method :</span>
-            <select name="method">
-               <option value="cash on delivery">Cash on Delivery</option>
-               <option value="esewa">e-Sewa</option>
-               <option value="khalti">Khalti</option>
+            <select name="method" id="method">
+                <option value="cash on delivery">Cash on Delivery</option>
+                <option value="esewa">e-Sewa</option>
             </select>
-         </div>
-         <div class="inputBox">
-            <span>Address line 01 :</span>
-            <input type="text" name="road" required placeholder="e.g. magani road">
-         </div>
-         <div class="inputBox">
-            <span>address line 02 :</span>
-            <input type="text" name="street" required placeholder="e.g. Khanepani Chowk">
-         </div>
-         <div class="inputBox">
+        </div>
+        <div class="inputBox">
             <span>City :</span>
-            <input type="text" name="city" required placeholder="e.g. Parsa">
-         </div>
-         <div class="inputBox">
+            <input type="text" name="city" id="city" required placeholder="e.g. Parsa">
+        </div>
+        <div class="inputBox">
             <span>District :</span>
-            <input type="text" name="district" required placeholder="e.g. Chitwan">
-         </div>
-      </div>
-      <input type="submit" value="order now" class="btn" name="order_btn">
-   </form>
+            <input type="text" name="district" id="district" required placeholder="e.g. Chitwan">
+        </div>
+    </div>
+    <input type="submit" value="order now" class="btn" name="order_btn">
+</form>
+
+<script>
+function validateForm() {
+    // Get form inputs
+    const name = document.getElementById("name").value;
+    const number = document.getElementById("number").value;
+    const email = document.getElementById("email").value;
+    const city = document.getElementById("city").value;
+    const district = document.getElementById("district").value;
+    
+    // Regular expressions for validation
+    const nameRegex = /^[a-zA-Z\s]+$/;  // Letters and spaces only
+    const numberRegex = /^[0-9]{10}$/; // 10
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validate name (letters only)
+    if (!name.match(nameRegex)) {
+        alert("Please enter a valid name.");
+        return false;
+    }
+
+    // Validate phone number (7-15 digits)
+    if (!number.match(numberRegex)) {
+        alert("Please enter a valid phone number (10 digits).");
+        return false;
+    }
+
+    // Validate email
+    if (!email.match(emailRegex)) {
+        alert("Please enter a valid email address.");
+        return false;
+    }
+
+    // Validate city and district (both required, non-empty)
+    if (city.trim() === "" || district.trim() === "") {
+        alert("Please enter your city and district.");
+        return false;
+    }
+
+    // If all validations pass
+    return true;
+}
+</script>
+
 
 </section>
 
