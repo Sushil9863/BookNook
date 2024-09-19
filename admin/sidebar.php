@@ -29,7 +29,10 @@
     <a href="orders.php"   onclick="location.href='orders.php'" ><i class="fa fa-list"></i>  Orders</a>
 
 
-    <a href="messages.php"   onclick="location.href='messages.php'" ><i class="fa-solid fa-envelope"></i>Messages</a>
+    <a href="messages.php"   onclick="location.href='messages.php'" ><i class="fa-regular fa-envelope"></i>Messages</a>
+
+
+    <a href="ratings.php"   onclick="location.href='ratings.php'" ><i class="fa fa-star"></i>Ratings</a>
 
     <a href="settings.php"   onclick="location.href='settings.php'" ><i class="fa solid fa-gear"></i> Settings</a>
 </div>
