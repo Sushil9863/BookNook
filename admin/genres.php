@@ -168,6 +168,16 @@ if(isset($_GET['delete'])){
   transform: scale(1.05);
 }
 
+
+.show-products .box-container .box-users {
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    border-radius: .5rem;
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    background-color: rgba(5, 5, 5, 0.53);
+}
   </style>
 </head>
 <body>
@@ -202,7 +212,7 @@ if(isset($_GET['delete'])){
       if(mysqli_num_rows($select_genres) > 0){
          while($fetch_genres = mysqli_fetch_assoc($select_genres)){
    ?>
-   <div class="box">
+   <div class="box-users">
       <div class="name"><?php echo $fetch_genres['name']; ?></div>
       <a href="genres.php?update=<?php echo $fetch_genres['id']; ?>" class="option-btn">update</a>
       <a href="genres.php?delete=<?php echo $fetch_genres['id']; ?>" class="delete-btn" onclick="return confirm('delete this genre?');">delete</a>
