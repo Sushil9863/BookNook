@@ -282,7 +282,7 @@ section{
 }
 
 .add-products form{
-   background-color: transparent;
+   background-color: rgba(5, 5, 5, 0.53);
    border-radius: .5rem;
    padding:2rem;
    text-align: center;
@@ -296,7 +296,7 @@ section{
    background-color: transparent;
    font-size: 2.5rem;
    text-transform: uppercase;
-   color:var(--black);
+   color:white;
    margin-bottom: 1.5rem;
 }
 

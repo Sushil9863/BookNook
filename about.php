@@ -3,7 +3,7 @@
 include 'config.php';
 
 session_start();
-$select_authors = mysqli_query($conn, "SELECT * FROM `authors`") or die('Query failed');
+$select_authors = mysqli_query($conn, "SELECT * FROM `authors` LIMIT 6") or die('Query failed');
 
 
 // Assuming user is logged in and their ID is stored in the session
@@ -40,7 +40,7 @@ if (isset($_POST['submit_review'])) {
 }
 
 // Fetch reviews from the database
-$select_reviews = mysqli_query($conn, "SELECT * FROM reviews") or die('Query failed');
+$select_reviews = mysqli_query($conn, "SELECT * FROM reviews LIMIT 6") or die('Query failed');
 
 ?>
 
