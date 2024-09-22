@@ -87,7 +87,7 @@ if (isset($_POST['delete_all'])) {
                   <p> payment method : <span><?php echo $fetch_orders['method']; ?></span> </p>
                   <p> your orders : <span><?php echo $fetch_orders['total_products']; ?></span> </p>
                   <p> total price : <span>Rs.<?php echo $fetch_orders['total_price']; ?>/-</span> </p>
-                  <p> payment status : <span style="color:<?php if ($fetch_orders['payment_status'] == 'pending') {
+                  <p> payment status : <span style="color:<?php if ($fetch_orders['payment_status'] == 'Pending') {
                     echo 'red';
                      } 
                      else {
