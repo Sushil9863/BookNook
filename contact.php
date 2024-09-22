@@ -57,14 +57,40 @@ if(!isset($user_id)){
 
 <section class="contact">
 
-   <form action="" method="post">
-      <h3>say something!</h3>
-      <input type="text" name="name" required placeholder="enter your name" class="box">
-      <input type="email" name="email" required placeholder="enter your email" class="box">
-      <input type="number" name="number" required placeholder="enter your number" class="box">
-      <textarea name="message" class="box" placeholder="enter your message" id="" cols="30" rows="10"></textarea>
-      <input type="submit" value="send message" name="send" class="btn">
-   </form>
+<form action="" method="post" onsubmit="return validateForm()">
+   <h3>Say something!</h3>
+   <input type="text" name="name" id="name" required placeholder="Enter your name" class="box">
+   <input type="email" name="email" id="email" required placeholder="Enter your email" class="box">
+   <input type="text" name="number" id="number" required placeholder="Enter your number" class="box">
+   <textarea name="message" class="box" placeholder="Enter your message" id="message" cols="30" rows="10"></textarea>
+   <input type="submit" value="Send Message" name="send" class="btn">
+</form>
+
+<script>
+   function validateForm() {
+      // Name validation: must not start with a number
+      const name = document.getElementById('name').value;
+      const nameRegex = /^[^\d][\w\s]*$/;  // Ensures name doesn't start with a number
+      if (!nameRegex.test(name)) {
+         alert("Name must not start with a number.");
+         return false;
+      }
+
+      // Email validation (handled by HTML5 input type email)
+      
+      // Number validation: Must start with 97 or 98 and be exactly 10 digits
+      const number = document.getElementById('number').value;
+      const numberRegex = /^(97|98)[0-9]{8}$/;
+      if (!numberRegex.test(number)) {
+         alert("Number must start with 97 or 98 and be 10 digits long.");
+         return false;
+      }
+
+      // Message is optional but can add specific validation if needed
+      return true;
+   }
+</script>
+
 
 </section>
 

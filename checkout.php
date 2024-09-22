@@ -144,7 +144,7 @@ function validateForm() {
     
     // Regular expressions for validation
     const nameRegex = /^[a-zA-Z\s]+$/;  // Letters and spaces only
-    const numberRegex = /^[0-9]{10}$/; // 10
+    const numberRegex = /^(97|98)[0-9]{8}$/; 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Validate name (letters only)
