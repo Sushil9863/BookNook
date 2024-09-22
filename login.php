@@ -3,8 +3,7 @@
 session_start();
 
 // check if the user is already logged in
-if(isset($_SESSION['username']))
-{
+if (isset($_SESSION['username'])) {
     header("location: index.php");
     exit;
 }
@@ -14,68 +13,56 @@ $username = $password = "";
 $err = "";
 
 // if request method is post
-if ($_SERVER['REQUEST_METHOD'] == "POST"){
-    if(empty(trim($_POST['username'])) || empty(trim($_POST['password'])))
-    {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if (empty(trim($_POST['username'])) || empty(trim($_POST['password']))) {
         $err = "Please enter username and password";
         echo "<script>alert('$err');</script>";
-    }
-    else{
+    } else {
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
     }
 
+    if (empty($err)) {
+        $sql = "SELECT id, username, password, status FROM user_details WHERE username = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        $param_username = $username;
+        mysqli_stmt_bind_param($stmt, "s", $param_username);
 
-if(empty($err))
-{
-    $sql = "SELECT id,username,password FROM user_details WHERE username = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    $param_username = $username;
-    mysqli_stmt_bind_param($stmt, "s", $param_username);
-    
-    
-    
-    // Try to execute this statement
-    if(mysqli_stmt_execute($stmt)){
-        mysqli_stmt_store_result($stmt);
-        if(mysqli_stmt_num_rows($stmt) == 1)
-                {
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if(mysqli_stmt_fetch($stmt))
-                    {
-                        if(password_verify($password, $hashed_password))
-                        {
-                            // this means the password is corrct. Allow user to login
+        // Try to execute this statement
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_store_result($stmt);
+            if (mysqli_stmt_num_rows($stmt) == 1) {
+                mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $status);
+                if (mysqli_stmt_fetch($stmt)) {
+                    if ($status === 'Active') {
+                        // Check if the password is correct
+                        if (password_verify($password, $hashed_password)) {
+                            // Password is correct, allow login
                             session_start();
                             $_SESSION["username"] = $username;
                             $_SESSION["id"] = $id;
                             $_SESSION["loggedin"] = true;
-                            // $_SESSION["isSignedIn"] = true;
 
                             //Redirect user to welcome page
                             header("location: index.php");
-                            
-                        }
-                        else{
+                        } else {
                             $err = "Username and password do not match.";
                             echo "<script>alert('$err');</script>";
                         }
+                    } else {
+                        $err = "Your account is blocked due to some activity.";
+                        echo "<script>alert('$err');</script>";
                     }
-
                 }
-                else{
-                    $err = "This user is not registered..";
-                    echo "<script>alert('$err');</script>";
-                }
-
+            } else {
+                $err = "This user is not registered.";
+                echo "<script>alert('$err');</script>";
+            }
+        }
     }
-}    
-
-
 }
-
-
 ?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
