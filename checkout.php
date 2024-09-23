@@ -213,13 +213,29 @@ if(isset($_POST['order_btn'])){
                 <option value="esewa">e-Sewa</option>
             </select>
         </div>
-        <div class="inputBox">
-            <span>City :</span>
-            <input type="text" name="city" id="city" required placeholder="e.g. Parsa">
-        </div>
+        
         <div class="inputBox">
             <span>District :</span>
-            <input type="text" name="district" id="district" required placeholder="e.g. Chitwan">
+            <select name="district" id="district" required onchange="updateCities()">
+                <option value="">Select District</option>
+                <option value="Bhaktapur">Bhaktapur</option>
+                <option value="Chitwan">Chitwan</option>
+                <option value="Dhading">Dhading</option>
+                <option value="Dolakha">Dolakha</option>
+                <option value="Kathmandu">Kathmandu</option>
+                <option value="Lalitpur">Lalitpur</option>
+                <option value="Makwanpur">Makwanpur</option>
+                <option value="Nuwakot">Nuwakot</option>
+                <option value="Rasuwa">Rasuwa</option>
+                <option value="Sindhuli">Sindhuli</option>
+                <option value="Sindhupalchok">Sindhupalchok</option>
+            </select>
+        </div>
+        <div class="inputBox">
+            <span>City :</span>
+            <select name="city" id="city" required>
+                <option value="">Select City</option>
+            </select>
         </div>
     </div>
     
@@ -294,6 +310,39 @@ function validateForm() {
     // If all validations pass
     return true;
 }
+
+const cities = {
+        Bhaktapur: ["Bhaktapur", "Suryabinayak", "Changunarayan", "Nagadesh", "Sallaghari"],
+        Chitwan: ["Bharatpur", "Khairahani", "Ratnanagar", "Madi", "Meghauli", "Rapti"],
+        Dhading: ["Dhading Besi", "Gajuri", "Khadichaur", "Thakre", "Arukharka"],
+        Dolakha: ["Charikot", "Bhimeshwor", "Dolakha", "Kshamawati", "Suri"],
+        Kathmandu: ["Baneshwor", "Maitighar", "Teku", "Kalimati", "Nagarjun","Swayambhu","Taudaha"],
+        Lalitpur: ["Lalitpur", "Lagankhel", "Pulchowk", "Jawalkhel", "Sanepa"],
+        Makwanpur: ["Hetauda", "Makwanpur Gadhi", "Bharta", "Thaha", "Manahari"],
+        Nuwakot: ["Bidur", "Nuwakot", "Tadi", "Kharanitar", "Rudi"],
+        Rasuwa: ["Dhunche", "Syafru Besi", "Bhorle", "Ramche", "Bhotechaur"],
+        Sindhuli: ["Sindhuli", "Kamalamai", "Kuntabesi", "Duwakot", "Gajuri"],
+        Sindhupalchok: ["Chautara", "Barabise", "Melamchi", "Dolakha", "Panchpokhari"]
+    };
+
+    function updateCities() {
+        const districtSelect = document.getElementById("district");
+        const citySelect = document.getElementById("city");
+        const selectedDistrict = districtSelect.value;
+
+        // Clear previous options
+        citySelect.innerHTML = '<option value="">Select City</option>';
+
+        if (selectedDistrict) {
+            // Populate cities based on selected district
+            cities[selectedDistrict].forEach(city => {
+                const option = document.createElement("option");
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+    }
 </script>
 
 
