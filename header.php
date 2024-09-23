@@ -33,14 +33,12 @@ if(isset($message)){
          <a href="index.php" class="logo">BookNook</a>
 
          <nav class="navbar">
-            <a href="index.php">home</a>
-            <a href="about.php">about</a>
-            <a href="shop.php">shop</a>
-            <a href="contact.php">contact</a>
+            <a href="index.php">Home</a>
+            <a href="about.php">About</a>
+            <a href="shop.php">Shop</a>
+            <a href="contact.php">Contact</a>
             <?php if (isset($_SESSION['id'])): ?>
                <a href="orders.php">Order
-               </a>
-               <a href="ordershistory.php">Order history
                </a>
             <?php endif; ?>
          </nav>
