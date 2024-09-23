@@ -167,9 +167,11 @@ if(isset($_GET['delete'])){
       ?>
       <div class="box bg-white">
         <div class="name"><?php echo "Name: ", $fetch_genres['name']; ?></div>
+        <div class="name"><?php echo "Address: ", $fetch_genres['address']; ?></div>
+        <div class="name"><?php echo "Contact: ", $fetch_genres['number']; ?></div>
         <div class="name"><?php echo "Method: ", $fetch_genres['method']; ?></div>
         <div class="name"><?php echo "Products: ", $fetch_genres['total_products']; ?></div>
-        <div class="name"><?php echo "Price: ", $fetch_genres['total_price']; ?></div>
+        <div class="name"><?php echo "Price: Rs.", $fetch_genres['total_price']; ?></div>
         <div class="name"><?php echo "Payment Status: ", $fetch_genres['payment_status']; ?></div>
         <a href="orders.php?update=<?php echo $fetch_genres['id']; ?>" class="option-btn">update</a>
         <a href="orders.php?delete=<?php echo $fetch_genres['id']; ?>" class="delete-btn" onclick="return confirm('delete this order?');">delete</a>
