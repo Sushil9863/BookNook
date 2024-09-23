@@ -38,9 +38,14 @@ if(isset($message)){
             <a href="shop.php">Shop</a>
             <a href="contact.php">Contact</a>
             <?php if (isset($_SESSION['id'])): ?>
+<<<<<<< HEAD
                <a href="orders.php">Order</a>
                <a href="favorite.php">Favorite</a>
                <a href="sets.php">My Sets</a>
+=======
+               <a href="orders.php">Order
+               </a>
+>>>>>>> 8ae6e2e7d4cbe5a94f27be5966de06a934fb0c2a
             <?php endif; ?>
          </nav>
 

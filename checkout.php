@@ -253,7 +253,7 @@ function validateForm() {
 
     // Regular expressions for validation
     const nameRegex = /^[a-zA-Z\s]+$/;  // Letters and spaces only
-    const numberRegex = /^(97|98)[0-9]{8}$/; 
+    const numberRegex = /^(97|98)[0-9]{8}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Validate name (letters only)
@@ -264,7 +264,7 @@ function validateForm() {
 
     // Validate phone number (7-15 digits)
     if (!number.match(numberRegex)) {
-        alert("Please enter a valid phone number (10 digits).");
+        alert("Please enter a valid phone number (10 digits) start with 97 or 98 .");
         return false;
     }
 
