@@ -137,7 +137,7 @@ if(isset($_GET['delete'])){
       border-radius: 5px;
       cursor: pointer;
       font-size: 1rem;
-      background-color: #6c757d;
+      background-color: #28a745;
       color: #fff;
       transition: background-color 0.3s, transform 0.3s;
     }
