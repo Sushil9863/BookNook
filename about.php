@@ -7,12 +7,14 @@ $select_authors = mysqli_query($conn, "SELECT * FROM `authors` LIMIT 6") or die(
 
 
 // Assuming user is logged in and their ID is stored in the session
-$user_id = $_SESSION['id'];
+if (isset($_SESSION['id'])) {
+    // Assuming user is logged in and their ID is stored in the session
+    $user_id = $_SESSION['id'];
 // Fetch user name from user_details table
 $user_query = mysqli_query($conn, "SELECT username FROM user_details WHERE id='$user_id'");
 $user_data = mysqli_fetch_assoc($user_query);
 $user_name = $user_data['username'] ?? 'Guest';
-
+}
 // Handle review submission
 if (isset($_POST['submit_review'])) {
     $review_text = $_POST['review_text'];

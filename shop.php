@@ -4,57 +4,55 @@ include 'config.php';
 
 session_start();
 
-// $user_id = $_SESSION['id'];
+// Remove the user ID check from here, so the shop page does not redirect to login
+// We will handle the check only during "Add to Cart" or "Favorites" actions
 
-// if(!isset($user_id)){
-//    header('location:login.php');
-// }
+if (isset($_POST['add_to_cart'])) {
+    // Now we check for the user ID here
+    if (isset($_SESSION['id'])) {
+        $user_id = $_SESSION['id'];
 
-if(isset($_POST['add_to_cart'])){
-   $user_id = $_SESSION['id'];
-   if(!isset($user_id)){
-      header('location:login.php');
-   }
+        $product_name = $_POST['product_name'];
+        $product_price = $_POST['product_price'];
+        $product_image = $_POST['product_image'];
+        $product_quantity = $_POST['product_quantity'];
 
-   $product_name = $_POST['product_name'];
-   $product_price = $_POST['product_price'];
-   $product_image = $_POST['product_image'];
-   $product_quantity = $_POST['product_quantity'];
+        $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
 
-   $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
-
-   if(mysqli_num_rows($check_cart_numbers) > 0){
-      $message[] = 'already added to cart!';
-   }else{
-      mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-      $message[] = 'product added to cart!';
-   }
-
+        if (mysqli_num_rows($check_cart_numbers) > 0) {
+            $message[] = 'already added to cart!';
+        } else {
+            mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+            $message[] = 'product added to cart!';
+        }
+    } else {
+        // Redirect to login if user ID is not found
+        header('location:login.php');
+    }
 }
 
 if (isset($_POST['add_to_favorites'])) {
-   $user_id = $_SESSION['id'];
-   if (!isset($user_id)) {
-       header('location:login.php');
-   }
+    if (isset($_SESSION['id'])) {
+        $user_id = $_SESSION['id'];
+        $product_id = $_POST['product_id'];
 
-   $product_id = $_POST['product_id'];
+        // Check if the product is already in favorites
+        $check_favorites = mysqli_query($conn, "SELECT * FROM `favorites` WHERE user_id = '$user_id' AND product_id = '$product_id'") or die('query failed');
 
-   // Check if the product is already in favorites
-   $check_favorites = mysqli_query($conn, "SELECT * FROM `favorites` WHERE user_id = '$user_id' AND product_id = '$product_id'") or die('query failed');
-
-   if (mysqli_num_rows($check_favorites) > 0) {
-       // If it is, remove it from favorites
-       mysqli_query($conn, "DELETE FROM `favorites` WHERE user_id = '$user_id' AND product_id = '$product_id'") or die('query failed');
-       $message[] = 'product removed from favorites!';
-   } else {
-       // If it is not, add it to favorites
-       mysqli_query($conn, "INSERT INTO `favorites`(user_id, product_id) VALUES('$user_id', '$product_id')") or die('query failed');
-       $message[] = 'product added to favorites!';
-   }
+        if (mysqli_num_rows($check_favorites) > 0) {
+            // If it is, remove it from favorites
+            mysqli_query($conn, "DELETE FROM `favorites` WHERE user_id = '$user_id' AND product_id = '$product_id'") or die('query failed');
+            $message[] = 'product removed from favorites!';
+        } else {
+            // If it is not, add it to favorites
+            mysqli_query($conn, "INSERT INTO `favorites`(user_id, product_id) VALUES('$user_id', '$product_id')") or die('query failed');
+            $message[] = 'product added to favorites!';
+        }
+    } else {
+        // Redirect to login if user is not logged in
+        header('location:login.php');
+    }
 }
-
-
 
 ?>
 
@@ -112,14 +110,17 @@ if (isset($_POST['add_to_favorites'])) {
    <div class="box-container">
 
       <?php  
-         $user_id = $_SESSION['id']; // Assuming you store the user ID in session
          $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
          if(mysqli_num_rows($select_products) > 0){
             while($fetch_products = mysqli_fetch_assoc($select_products)){
-               // Check if the product is already in favorites
-               $product_id = $fetch_products['id'];
-               $check_favorite = mysqli_query($conn, "SELECT * FROM `favorites` WHERE `user_id` = '$user_id' AND `product_id` = '$product_id'") or die('query failed');
-               $is_favorite = mysqli_num_rows($check_favorite) > 0;
+               // Check if the user is logged in to handle favorites display
+               $is_favorite = false;
+               if (isset($_SESSION['id'])) {
+                  $user_id = $_SESSION['id'];
+                  $product_id = $fetch_products['id'];
+                  $check_favorite = mysqli_query($conn, "SELECT * FROM `favorites` WHERE `user_id` = '$user_id' AND `product_id` = '$product_id'") or die('query failed');
+                  $is_favorite = mysqli_num_rows($check_favorite) > 0;
+               }
       ?>
      <form action="" method="post" class="box">
       <img class="image" src="uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
@@ -146,15 +147,6 @@ if (isset($_POST['add_to_favorites'])) {
    </div>
 
 </section>
-
-
-
-
-
-
-
-
-
 
 <?php include 'footer.php'; ?>
 

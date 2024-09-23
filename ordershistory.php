@@ -117,9 +117,19 @@ $order_query = mysqli_query($conn, "
                   <div style="margin-top: 2rem; text-align:center;">
                   <form action="reviewcheckout.php" method="get" style="display:inline;">
                      <!-- Pass the necessary order data as query parameters -->
-                     <input type="hidden" name="products" value="<?php echo urlencode($fetch_orders['total_products']); ?>">
+                    <!-- Inside ordershistory.php -->
+                  <form action="reviewcheckout.php" method="get" style="display:inline;">
+                     <!-- Pass the necessary order data as query parameters -->
+                     <input type="hidden" name="order_id" value="<?php echo $fetch_orders['user_id']; ?>">
+                     <input type="hidden" name="products" value="<?php echo ($fetch_orders['total_products']); ?>">
                      <input type="hidden" name="total_price" value="<?php echo $fetch_orders['total_price']; ?>">
+                     <input type="hidden" name="name" value="<?php echo ($fetch_orders['name']); ?>">
+                     <input type="hidden" name="email" value="<?php echo ($fetch_orders['email']); ?>">
+                     <input type="hidden" name="address" value="<?php echo ($fetch_orders['address']); ?>">
+                     <input type="hidden" name="phone" value="<?php echo ($fetch_orders['number']); ?>">
                      <button type="submit" class="action-btn">Re-Order</button>
+                  </form>
+
                   </form>
 
 
