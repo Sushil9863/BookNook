@@ -40,7 +40,6 @@ if(isset($message)){
             <?php if (isset($_SESSION['id'])): ?>
                <a href="orders.php">Order</a>
                <a href="favorite.php">Favorite</a>
-               <a href="sets.php">My Sets</a>
             <?php endif; ?>
          </nav>
 
