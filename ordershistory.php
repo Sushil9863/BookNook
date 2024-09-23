@@ -30,6 +30,7 @@ $order_query = mysqli_query($conn, "
     AND payment_status = 'Completed'
 ") or die('query failed');
 
+
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +72,7 @@ $order_query = mysqli_query($conn, "
       }
 
       .clear-history-btn {
+         margin-left: 45%;
          margin-top: 20px;
          background-color: #ff6b6b;
          padding: 12px 25px;
