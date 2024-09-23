@@ -12,53 +12,66 @@ if(!isset($user_id)){
 
 if(isset($_POST['order_btn'])){
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $number = $_POST['number'];
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $method = mysqli_real_escape_string($conn, $_POST['method']);
-   $address = mysqli_real_escape_string($conn, '  '. $_POST['city'].', '. $_POST['district']);
-   $placed_on = date('d-M-Y');
-   $payment_status = "Pending";
-
-   $cart_total = 0;
-   $cart_products = [];
-   
-   $selected_items = explode(',', $_POST['selected_items']); // Get selected item IDs from hidden input
-
-   if(count($selected_items) > 0){
-      foreach($selected_items as $item_id){
-         $cart_query = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id' AND id = '$item_id'") or die('query failed');
-         if(mysqli_num_rows($cart_query) > 0){
-            while($cart_item = mysqli_fetch_assoc($cart_query)){
-               $cart_products[] = $cart_item['name'].' ('.$cart_item['quantity'].') ';
-               $sub_total = ($cart_item['price'] * $cart_item['quantity']);
-               $cart_total += $sub_total;
-            }
-         }
-      }
-   }
-
-   $total_products = implode(', ', $cart_products);
-
-   if($cart_total == 0){
-      $message[] = 'No items selected for the order!';
-   } else {
-      $order_query = mysqli_query($conn, "SELECT * FROM `orders` WHERE name = '$name' AND number = '$number' AND email = '$email' AND method = '$method' AND address = '$address' AND total_products = '$total_products' AND total_price = '$cart_total'") or die('query failed');
-
-      if(mysqli_num_rows($order_query) > 0){
-         $message[] = 'order already placed!';
-      } else {
-         mysqli_query($conn, "INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on, payment_status) VALUES('$user_id', '$name', '$number', '$email', '$method', '$address', '$total_products', '$cart_total', '$placed_on', '$payment_status')") or die('query failed');
-         $message[] = 'order placed successfully!';
-
-         // Remove only the ordered items from the cart
-         foreach($selected_items as $item_id){
-            mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id' AND id = '$item_id'") or die('query failed');
-         }
-      }
-   }
-
-}
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $number = $_POST['number'];
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $method = mysqli_real_escape_string($conn, $_POST['method']);
+    $address = mysqli_real_escape_string($conn, '  '. $_POST['city'].', '. $_POST['district']);
+    $placed_on = date('d-M-Y');
+    $payment_status = "Pending";
+ 
+    $cart_total = 0;
+    $cart_products = [];
+    
+    $selected_items = explode(',', $_POST['selected_items']); // Get selected item IDs from hidden input
+ 
+    if(count($selected_items) > 0){
+       foreach($selected_items as $item_id){
+          $cart_query = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id' AND id = '$item_id'") or die('query failed');
+          if(mysqli_num_rows($cart_query) > 0){
+             while($cart_item = mysqli_fetch_assoc($cart_query)){
+                $cart_products[] = $cart_item['name'].' ('.$cart_item['quantity'].') ';
+                $sub_total = ($cart_item['price'] * $cart_item['quantity']);
+                $cart_total += $sub_total;
+             }
+          }
+       }
+    }
+ 
+    $total_products = implode(', ', $cart_products);
+ 
+    if($cart_total == 0){
+       $message[] = 'No items selected for the order!';
+    } else {
+       $order_query = mysqli_query($conn, "SELECT * FROM `orders` WHERE name = '$name' AND number = '$number' AND email = '$email' AND method = '$method' AND address = '$address' AND total_products = '$total_products' AND total_price = '$cart_total'") or die('query failed');
+ 
+       if(mysqli_num_rows($order_query) > 0){
+          $message[] = 'order already placed!';
+       } else {
+          // Insert the order into the database
+          mysqli_query($conn, "INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on, payment_status) VALUES('$user_id', '$name', '$number', '$email', '$method', '$address', '$total_products', '$cart_total', '$placed_on', '$payment_status')") or die('query failed');
+          $message[] = 'order placed successfully!';
+ 
+          // Loop through selected items to remove from the cart and update stock
+          foreach($selected_items as $item_id){
+             // Fetch item details from the cart
+             $cart_item = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id' AND id = '$item_id'") or die('query failed');
+             if($cart_item_row = mysqli_fetch_assoc($cart_item)){
+                $product_name = $cart_item_row['name'];
+                $product_quantity = $cart_item_row['quantity'];
+ 
+                // Update the product stock
+                mysqli_query($conn, "UPDATE `products` SET stocks = stocks - $product_quantity WHERE name = '$product_name'") or die('query failed');
+             }
+             
+             // Remove the item from the cart
+             mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id' AND id = '$item_id'") or die('query failed');
+          }
+       }
+    }
+ 
+ }
+ 
 
 ?>
 

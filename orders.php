@@ -10,19 +10,60 @@ if (!isset($user_id)) {
    header('location:login.php');
 }
 
-// If delete is set, delete the order based on the order_id instead of user_id
+// Function to update stock for each product in the order
+function update_stock($order_items, $conn) {
+   // Split the items string into an array of individual products
+   $items = explode(',', $order_items);
+
+   foreach ($items as $item) {
+      // Extract the product name and quantity from the string
+      preg_match('/(.+?)\s\((\d+)\)/', trim($item), $matches);
+      if (count($matches) == 3) {
+         $product_name = $matches[1]; // e.g., 'China Harayeko Manxe'
+         $quantity = (int)$matches[2]; // e.g., '5'
+
+         // Update the stock of this product in the database
+         mysqli_query($conn, "UPDATE `products` SET `stocks` = `stocks` + $quantity WHERE `name` = '$product_name'") or die('query failed');
+      }
+   }
+}
+
+// If delete is set, delete the order and update stock based on the total_products
 if (isset($_GET['delete'])) {
    $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `orders` WHERE id = '$delete_id' AND user_id = '$user_id'") or die('query failed');
-   header('location:orders.php');
+
+   // Retrieve the order to get the total_products before deleting
+   $order_query = mysqli_query($conn, "SELECT total_products FROM `orders` WHERE id = '$delete_id' AND user_id = '$user_id'") or die('query failed');
+
+   if (mysqli_num_rows($order_query) > 0) {
+      $order = mysqli_fetch_assoc($order_query);
+
+      // Update stock for each product in the order
+      update_stock($order['total_products'], $conn);
+
+      // Delete the order after updating the stock
+      mysqli_query($conn, "DELETE FROM `orders` WHERE id = '$delete_id' AND user_id = '$user_id'") or die('query failed');
+      header('location:orders.php');
+   }
 }
 
 // Handle the "Delete All" button
 if (isset($_POST['delete_all'])) {
+   // Retrieve all orders for the user to update stock before deleting
+   $orders_query = mysqli_query($conn, "SELECT total_products FROM `orders` WHERE user_id = '$user_id'") or die('query failed');
+
+   while ($order = mysqli_fetch_assoc($orders_query)) {
+      // Update stock for each order
+      update_stock($order['total_products'], $conn);
+   }
+
+   // Delete all orders after updating the stock
    mysqli_query($conn, "DELETE FROM `orders` WHERE user_id = '$user_id'") or die('query failed');
    header('location:orders.php');
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

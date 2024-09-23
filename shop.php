@@ -16,14 +16,20 @@ if (isset($_POST['add_to_cart'])) {
         $product_price = $_POST['product_price'];
         $product_image = $_POST['product_image'];
         $product_quantity = $_POST['product_quantity'];
+        $product_stock = $_POST['product_stock'];
 
-        $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
-
-        if (mysqli_num_rows($check_cart_numbers) > 0) {
-            $message[] = 'already added to cart!';
+        // Ensure user does not add more than the available stock
+        if ($product_quantity > $product_stock) {
+            $message[] = 'Cannot add more than available stock!';
         } else {
-            mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-            $message[] = 'product added to cart!';
+            $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
+
+            if (mysqli_num_rows($check_cart_numbers) > 0) {
+                $message[] = 'Already added to cart!';
+            } else {
+                mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+                $message[] = 'Product added to cart!';
+            }
         }
     } else {
         // Redirect to login if user ID is not found
@@ -42,11 +48,11 @@ if (isset($_POST['add_to_favorites'])) {
         if (mysqli_num_rows($check_favorites) > 0) {
             // If it is, remove it from favorites
             mysqli_query($conn, "DELETE FROM `favorites` WHERE user_id = '$user_id' AND product_id = '$product_id'") or die('query failed');
-            $message[] = 'product removed from favorites!';
+            $message[] = 'Product removed from favorites!';
         } else {
             // If it is not, add it to favorites
             mysqli_query($conn, "INSERT INTO `favorites`(user_id, product_id) VALUES('$user_id', '$product_id')") or die('query failed');
-            $message[] = 'product added to favorites!';
+            $message[] = 'Product added to favorites!';
         }
     } else {
         // Redirect to login if user is not logged in
@@ -121,6 +127,7 @@ if (isset($_POST['add_to_favorites'])) {
                   $check_favorite = mysqli_query($conn, "SELECT * FROM `favorites` WHERE `user_id` = '$user_id' AND `product_id` = '$product_id'") or die('query failed');
                   $is_favorite = mysqli_num_rows($check_favorite) > 0;
                }
+               $available_stock = $fetch_products['stocks']; // Fetch available stock
       ?>
      <form action="" method="post" class="box">
       <img class="image" src="uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
@@ -130,12 +137,14 @@ if (isset($_POST['add_to_favorites'])) {
          </button>
       </div>
       <div class="name"><?php echo $fetch_products['name']; ?></div>
+      <div class="stock">Stock: <?php echo $available_stock; ?></div> <!-- Display available stock -->
       <div class="price">Rs.<?php echo $fetch_products['price']; ?>/-</div>
-      <input type="number" min="1" name="product_quantity" value="1" class="qty">
+      <input type="number" min="1" name="product_quantity" value="1" max="<?php echo $available_stock; ?>" class="qty" required>
       <input type="hidden" name="product_id" value="<?php echo $fetch_products['id']; ?>">
       <input type="hidden" name="product_name" value="<?php echo $fetch_products['name']; ?>">
       <input type="hidden" name="product_price" value="<?php echo $fetch_products['price']; ?>">
       <input type="hidden" name="product_image" value="<?php echo $fetch_products['image']; ?>">
+      <input type="hidden" name="product_stock" value="<?php echo $available_stock; ?>"> <!-- Store available stock -->
       <input type="submit" value="add to cart" name="add_to_cart" class="btn">
      </form>
       <?php
