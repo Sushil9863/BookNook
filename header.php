@@ -40,6 +40,8 @@ if(isset($message)){
             <?php if (isset($_SESSION['id'])): ?>
                <a href="orders.php">Order
                </a>
+               <a href="ordershistory.php">Order history
+               </a>
             <?php endif; ?>
          </nav>
 
