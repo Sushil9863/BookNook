@@ -187,42 +187,70 @@ if(isset($_GET['delete'])) {
 
   <section class="add-products">
     <h1 class="title">Shop Books</h1>
-    <form action="" method="post" enctype="multipart/form-data">
-      <h3>Add Books</h3>
-      <input type="text" name="name" class="box" placeholder="Enter Book Name" required>
-      <input type="number" min="150" name="price" class="box" placeholder="Enter Book Price" required>
-      <select name="author" class="box" required>
-        <option value="" disabled selected>Select Authors</option>
-        <?php
-        $select_authors = mysqli_query($conn, "SELECT * FROM `authors`") or die('query failed');
-        if(mysqli_num_rows($select_authors) > 0){
-          while($fetch_authors = mysqli_fetch_assoc($select_authors)){
-            echo '<option value="'.$fetch_authors['id'].'">'.$fetch_authors['name'].'</option>';
-          }
-        } else {
-          echo '<option value="" disabled>No authors available</option>';
-        }
-        ?>
-      </select>
-      <select name="genre" class="box" required>
-      <option value="" disabled selected>Select Genre</option>
-              <?php
-              $select_genres = mysqli_query($conn, "SELECT * FROM `genres`") or die('query failed');
-              if(mysqli_num_rows($select_genres) > 0){
-                while($fetch_genres = mysqli_fetch_assoc($select_genres)){
-                  $selected_genres = ($fetch_genres['id'] == $fetch_update['genre_id']) ? 'selected' : '';
-                  echo '<option value="'.$fetch_genres['id'].'" '.$selected_genres.'>'.$fetch_genres['name'].'</option>';
+    <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateBookForm()">
+        <h3>Add Books</h3>
+        <input type="text" name="name" id="book-name" class="box" placeholder="Enter Book Name" required>
+        <input type="number" min="150" name="price" class="box" placeholder="Enter Book Price" required>
+
+        <select name="author" class="box" required>
+            <option value="" disabled selected>Select Authors</option>
+            <?php
+            $select_authors = mysqli_query($conn, "SELECT * FROM `authors`") or die('query failed');
+            if (mysqli_num_rows($select_authors) > 0) {
+                while ($fetch_authors = mysqli_fetch_assoc($select_authors)) {
+                    echo '<option value="'.$fetch_authors['id'].'">'.$fetch_authors['name'].'</option>';
                 }
-              } else {
+            } else {
+                echo '<option value="" disabled>No authors available</option>';
+            }
+            ?>
+        </select>
+
+        <select name="genre" class="box" required>
+            <option value="" disabled selected>Select Genre</option>
+            <?php
+            $select_genres = mysqli_query($conn, "SELECT * FROM `genres`") or die('query failed');
+            if (mysqli_num_rows($select_genres) > 0) {
+                while ($fetch_genres = mysqli_fetch_assoc($select_genres)) {
+                    echo '<option value="'.$fetch_genres['id'].'">'.$fetch_genres['name'].'</option>';
+                }
+            } else {
                 echo '<option value="" disabled>No genres available</option>';
-              }
-              ?>
-            </select>
-      <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
-      <input type="number" name="stock" class="box" placeholder="Enter Book Stock" min="0" required>
-      <input type="submit" value="Add Books" name="add_product" class="btn">
+            }
+            ?>
+        </select>
+
+        <input type="file" name="image" id="book-image" accept="image/jpg, image/jpeg, image/png" class="box" required>
+        <input type="number" name="stock" class="box" placeholder="Enter Book Stock" min="0" required>
+        <input type="submit" value="Add Books" name="add_product" class="btn">
     </form>
-  </section>
+</section>
+
+<script>
+   function validateBookForm() {
+      // Validate the book name: must not start with a number and must end with a letter
+      const bookName = document.getElementById('book-name').value.trim();
+      const nameRegex = /^[^\d].*[a-zA-Z]$/; // Ensures the name doesn't start with a number and ends with a letter
+      if (!nameRegex.test(bookName)) {
+         alert("Book name must not start with a number and must end with a letter.");
+         return false;
+      }
+
+      // Validate the image file (only JPEG, JPG, or PNG files)
+      const imageInput = document.getElementById('book-image');
+      const imagePath = imageInput.value;
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; // Accepts .jpg, .jpeg, .png
+      
+      if (!allowedExtensions.exec(imagePath)) {
+         alert("Please upload a file with .png, .jpg, or .jpeg extension.");
+         imageInput.value = ''; // Clear the input field
+         return false;
+      }
+
+      return true; // If all validations pass
+   }
+</script>
+
 
   <section class="show-products">
     <div class="box-container">
@@ -300,6 +328,7 @@ if(isset($_GET['delete'])) {
       echo '<script>document.querySelector(".edit-product-form").style.display = "none";</script>';
     }
     ?>
+
   </section>
 
   <script type="text/javascript" src="assets/js/script.js"></script>

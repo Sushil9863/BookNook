@@ -28,6 +28,20 @@ if(!isset($user_id)){
    }
 
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   $email = $_POST['email'];
+
+   // Query to check if the email exists in the database
+   $query = "SELECT * FROM users WHERE email = '$email'";
+   $result = mysqli_query($conn, $query);
+
+   if (mysqli_num_rows($result) == 0) {
+       echo "<script>alert('Email is not registered!');</script>";
+   } else {
+       // Proceed with form processing
+   }
+}
+
 
 ?>
 
@@ -59,40 +73,45 @@ if(!isset($user_id)){
 
 <form action="" method="post" onsubmit="return validateForm()">
    <h3>Say something!</h3>
+   
    <input type="text" name="name" id="name" required placeholder="Enter your name" class="box">
    <input type="email" name="email" id="email" required placeholder="Enter your email" class="box">
    <input type="text" name="number" id="number" required placeholder="Enter your number" class="box">
    <textarea name="message" class="box" placeholder="Enter your message" id="message" cols="30" rows="10"></textarea>
+   
    <input type="submit" value="Send Message" name="send" class="btn">
 </form>
 
 <script>
    function validateForm() {
-      // Name validation: must not start with a number
-      const name = document.getElementById('name').value;
-      const nameRegex = /^[^\d][\w\s]*$/;  // Ensures name doesn't start with a number
+      // Name validation: Must not start with a number, and must only contain letters, spaces, or valid characters
+      const name = document.getElementById('name').value.trim();
+      const nameRegex = /^[^\d][a-zA-Z\s]*$/;  // Ensures name doesn't start with a number and contains only valid characters
       if (!nameRegex.test(name)) {
-         alert("Name must not start with a number.");
+         alert("Name must not start with a number and can only contain letters and spaces.");
          return false;
       }
 
-      // Email validation (handled by HTML5 input type email)
-      
-      // Number validation: Must start with 97 or 98 and be exactly 10 digits
-      const number = document.getElementById('number').value;
-      const numberRegex = /^(97|98)[0-9]{8}$/;
+      // Email validation: Must not start with a number and must contain @gmail.com
+      const email = document.getElementById('email').value.trim();
+      const emailRegex = /^[^\d][a-zA-Z0-9._%+-]+@gmail\.com$/; // Ensures email doesn't start with a number and ends with @gmail.com
+      if (!emailRegex.test(email)) {
+         alert("Email must not start with a number and must end with '@gmail.com'.");
+         return false;
+      }
+
+      // Phone number validation: Must be exactly 10 digits long and start with 97 or 98
+      const number = document.getElementById('number').value.trim();
+      const numberRegex = /^(97|98)[0-9]{8}$/; // Ensures number starts with 97 or 98 and is exactly 10 digits
       if (!numberRegex.test(number)) {
-         alert("Number must start with 97 or 98 and be 10 digits long.");
+         alert("Phone number must start with 97 or 98 and be exactly 10 digits long.");
          return false;
       }
 
-      // Message is optional but can add specific validation if needed
+      // All validations passed
       return true;
    }
 </script>
-
-
-</section>
 
 
 <?php include 'footer.php'; ?>

@@ -55,22 +55,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   <div class="wrapper container center-form">
-    <div class="col-md-6">
-      <h1 style="color:white;">Settings</h1>
-      <form method="post" action="">
-        <div class="form-group">
-          <label for="adminname" style="color:white;">Admin Name:</label>
-          <input type="text" class="inp-box input form-control" id="adminname" name="adminname" required>
-        </div>
-        <div class="form-group">
-          <label for="password" style="color:white;">Password:</label>
-          <input type="password" class="inp-box input form-control" id="password" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+  <div class="col-md-6">
+   <h1 style="color:white;">Settings</h1>
+   <form method="post" action="" onsubmit="return validateSettingsForm()">
+      <div class="form-group">
+         <label for="adminname" style="color:white;">Admin Name:</label>
+         <input type="text" class="inp-box input form-control" id="adminname" name="adminname" required>
+      </div>
+      <div class="form-group">
+         <label for="password" style="color:white;">Password:</label>
+         <input type="password" class="inp-box input form-control" id="password" name="password" required>
+         <button type="submit" class="btn btn-primary">Update</button>
         <button type="button" class="btn btn-primary" onclick="location.href='dashboard.php'">Cancel</button>
       </form>
     </div>
   </div>
+<script>
+   function validateSettingsForm() {
+      // Admin name validation: must not start with a number
+      const adminName = document.getElementById('adminname').value.trim();
+      const nameRegex = /^[^\d][\w\s]*$/; // Ensures the name doesn't start with a number
+      if (!nameRegex.test(adminName)) {
+         alert("Admin name must not start with a number.");
+         return false;
+      }
+
+      // Password validation: must be at least 8 characters, contain one special character, and one capital letter
+      const password = document.getElementById('password').value.trim();
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+      if (!passwordRegex.test(password)) {
+         alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+         return false;
+      }
+
+      return true; // If both validations pass
+   }
+</script>
+
+      
 
     <script type="text/javascript" src="assets/js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>

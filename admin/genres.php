@@ -190,11 +190,24 @@ if(isset($_GET['delete'])){
 
    <h1 class="title">Our Genres</h1>
 
-   <form action="" method="post" enctype="multipart/form-data">
-      <h3>Add Genre</h3>
-      <input type="text" name="name" class="box" placeholder="Enter Genre" required>
-      <input type="submit" value="add genre" name="add_genre" class="option-btn">
-   </form>
+   <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateGenre()">
+   <h3>Add Genre</h3>
+   <input type="text" name="name" id="genre-name" class="box" placeholder="Enter Genre" required>
+   <input type="submit" value="Add Genre" name="add_genre" class="option-btn">
+</form>
+
+<script>
+   function validateGenre() {
+      const genreName = document.getElementById('genre-name').value.trim();
+      const genreRegex = /^[a-zA-Z\s]+$/; // Only allows letters and spaces
+      if (!genreRegex.test(genreName)) {
+         alert("Genre must not contain numbers or special characters.");
+         return false;
+      }
+      return true;
+   }
+</script>
+
 
 </section>
 
