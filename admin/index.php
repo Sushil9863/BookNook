@@ -87,30 +87,52 @@ if(empty($err))
     <title>BookNook-Admin Login</title>
 </head>
 <body>
-    <div class="wrapper-right">
-
-            <div class="title">
-                <h1>Welcome Back,</h1>
-                <p>Sign In to your account</p>
+<div class="wrapper-right">
+    <div class="title">
+        <h1>Welcome Back,</h1>
+        <p>Sign In to your account</p>
+    </div>
+    <form action="" method="post" onsubmit="return validateLoginForm()">
+        <div class="form-card">
+            <span class="label">Admin Name</span>
+            <div class="input-box">
+                <input type="text" id="adminname" name="admin_name" placeholder="Enter Admin Name" required>
+                <ion-icon name="person-outline"></ion-icon>
             </div>
-            <form action="" method="post">
-                <div class="form-card">
-                    <span class="label">Admin Name</span>
-                    <div class="input-box">
-                        <input type="text" id="adminname" name = "admin_name" placeholder="Enter Admin Name">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                </div>
-                <div class="form-card">
-                    <span class="label">Password</span>
-                    <div class="input-box">
-                        <input type="password" name="password" id="password" placeholder="Enter Admin Password">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                    </div>
-                </div>
-                <input type="submit" value="Login" class="login-btn">
-            </form>
         </div>
+        <div class="form-card">
+            <span class="label">Password</span>
+            <div class="input-box">
+                <input type="password" name="password" id="password" placeholder="Enter Admin Password" required>
+                <ion-icon name="lock-closed-outline"></ion-icon>
+            </div>
+        </div>
+        <input type="submit" value="Login" class="login-btn">
+    </form>
+</div>
+
+<script>
+    function validateLoginForm() {
+        // Admin name validation: must not start with a number
+        const adminName = document.getElementById('adminname').value.trim();
+        const nameRegex = /^[^\d][\w\s]*$/; // Ensures the name doesn't start with a number
+        if (!nameRegex.test(adminName)) {
+            alert("Admin name must not start with a number.");
+            return false;
+        }
+
+        // Password validation: must be at least 8 characters, contain one special character, and one capital letter
+        const password = document.getElementById('password').value.trim();
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+            return false;
+        }
+
+        return true; // If both validations pass
+    }
+</script>
+
 </body>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

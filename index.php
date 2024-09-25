@@ -173,7 +173,11 @@ include_once 'header.php';
 
    <div class="content">
       <h3>have any questions?</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, voluptatum.</p>
+      <p>At BookNook, we're here to help! Whether you're looking for personalized book recommendations, need assistance with your order, or simply have a question about our selection, feel free to reach out.
+      <br> <br> 
+Our friendly customer service team is always ready to assist you and ensure your experience with us is as smooth and enjoyable as possible.
+<br><br>
+Contact us today, and we'll be more than happy to help you discover your next great read!</p>
       <a href="contact.php" class="white-btn">contact us</a>
    </div>
 

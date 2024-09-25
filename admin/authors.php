@@ -211,12 +211,38 @@ if(isset($_GET['delete'])){
 
    <h1 class="title">Our Authors</h1>
 
-   <form action="" method="post" enctype="multipart/form-data">
-      <h3>add author</h3>
-      <input type="text" name="name" class="box" placeholder="Enter Author Name" required>
-      <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
-      <input type="submit" value="add author" name="add_author" class="option-btn">
-   </form>
+   <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateAuthorForm()">
+   <h3>Add Author</h3>
+   <input type="text" name="name" id="author-name" class="box" placeholder="Enter Author Name" required>
+   <input type="file" name="image" id="author-image" accept="image/jpg, image/jpeg, image/png" class="box" required>
+   <input type="submit" value="Add Author" name="add_author" class="option-btn">
+</form>
+
+<script>
+   function validateAuthorForm() {
+      // Validate the author name (no numbers allowed)
+      const authorName = document.getElementById('author-name').value.trim();
+      const nameRegex = /^[a-zA-Z\s]+$/; // Only allows letters and spaces
+      if (!nameRegex.test(authorName)) {
+         alert("Author name must not contain numbers or special characters.");
+         return false;
+      }
+
+      // Validate the image file (only PNG or JPG files)
+      const imageInput = document.getElementById('author-image');
+      const imagePath = imageInput.value;
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; // Accepts .jpg, .jpeg, .png
+      
+      if (!allowedExtensions.exec(imagePath)) {
+         alert("Please upload a file with .png, .jpg, or .jpeg extension.");
+         imageInput.value = ''; // Clear the input field
+         return false;
+      }
+
+      return true; // If all validations pass
+   }
+</script>
+
 
 </section>
 
