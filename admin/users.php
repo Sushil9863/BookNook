@@ -170,8 +170,20 @@ if (isset($_GET['status'])) {
     }
     ?>
   </section>
+            <div class="footer">
+                <?php include 'adminfooter.php' ?>
+            </div>
 
-
+  <script>
+   // Close the modal when clicking outside of it
+   window.onclick = function(event) {
+      var modal = document.querySelector('.edit-product-form');
+      if (event.target == modal) {
+         modal.style.display = "none";
+         location.href = 'authors.php'; // Redirect to avoid keeping modal open on page refresh
+      }
+   }
+</script>
   <script type="text/javascript" src="assets/js/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>

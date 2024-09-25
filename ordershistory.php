@@ -30,7 +30,21 @@ $order_query = mysqli_query($conn, "
     AND payment_status = 'Completed'
 ") or die('query failed');
 
+if (isset($_POST['submit_complaint'])) {
+   $user_id = $_POST['user_id'];
+   $name = mysqli_real_escape_string($conn, $_POST['name']);
+   $email = mysqli_real_escape_string($conn, $_POST['email']);
+   $number = mysqli_real_escape_string($conn, $_POST['number']);
+   $message = mysqli_real_escape_string($conn, $_POST['message']);
 
+   // Insert the complaint into the `message` table
+   $query = "INSERT INTO `message` (user_id, name, email, number, message) VALUES ('$user_id', '$name', '$email', '$number', '$message')";
+   mysqli_query($conn, $query) or die('Query Failed');
+
+   // Redirect back to orders page
+   header('Location: orders.php');
+   exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +78,11 @@ $order_query = mysqli_query($conn, "
       }
 
       .delete-btn {
+         margin:5px;
          background-color: #e62222;
+      }
+      .reorder-btn {
+         background-color: green;
       }
 
       .delete-btn:hover {
@@ -82,6 +100,115 @@ $order_query = mysqli_query($conn, "
          text-align: center;
          display: block;
       }
+
+      /* Modal Styling */
+      .modal {
+   display: none;
+   position: fixed;
+   z-index: 1;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   overflow: auto;
+   background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+   padding-top: 60px;
+}
+
+.modal-content {
+   background-color: #fff;
+   margin: 5% auto;
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   width: 80%;
+   max-width: 500px;
+   font-family: Arial, sans-serif;
+   transition: all 0.3s ease;
+}
+
+.close {
+   color: #333;
+   float: right;
+   font-size: 28px;
+   font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+   color: #ff6666;
+   cursor: pointer;
+}
+
+/* Form styles */
+.modal h2 {
+   font-size: 24px;
+   margin-bottom: 20px;
+   color: #333;
+   text-align: center;
+}
+
+.modal label {
+   font-size: 16px;
+   color: #333;
+   display: block;
+   margin-bottom: 8px;
+}
+
+.modal input,
+.modal textarea {
+   width: 100%;
+   padding: 12px;
+   margin-bottom: 20px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   font-size: 16px;
+   transition: border-color 0.3s ease;
+}
+
+.modal input:focus,
+.modal textarea:focus {
+   border-color: #4CAF50;
+   outline: none;
+}
+
+/* Make textarea bigger */
+.modal textarea {
+   height: 120px;
+   resize: none;
+}
+
+/* Submit button */
+.modal button {
+   background-color: #4CAF50;
+   color: white;
+   padding: 12px 20px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 16px;
+   width: 100%;
+   transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+   background-color: #45a049;
+}
+
+/* Make the form inputs and labels look aligned */
+.modal .form-group {
+   margin-bottom: 20px;
+}
+
+.modal .form-group label {
+   font-weight: bold;
+}
+
+.modal .form-group input,
+.modal .form-group textarea {
+   font-size: 16px;
+}
+
 
    </style>
 </head>
@@ -129,8 +256,9 @@ $order_query = mysqli_query($conn, "
                      <input type="hidden" name="email" value="<?php echo ($fetch_orders['email']); ?>">
                      <input type="hidden" name="address" value="<?php echo ($fetch_orders['address']); ?>">
                      <input type="hidden" name="phone" value="<?php echo ($fetch_orders['number']); ?>">
-                     <button type="submit" class="action-btn">Re-Order</button>
+                     <button type="submit" class="reorder-btn delete-btn">Re-Order</button>
                   </form>
+                  <button class="delete-btn" onclick="openModal('<?php echo $fetch_orders['name']; ?>', '<?php echo $fetch_orders['email']; ?>', '<?php echo $fetch_orders['number']; ?>')">Complain</button>
 
                   </form>
 
@@ -140,7 +268,7 @@ $order_query = mysqli_query($conn, "
                      <!-- Delete button -->
                      <form action="" method="get" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this order?');">
                         <input type="hidden" name="delete" value="<?php echo $fetch_orders['id']; ?>">
-                        <button type="submit" class="action-btn delete-btn">Delete</button>
+                        <button type="submit" class="delete-btn">Delete</button>
                      </form>
                   </div>
                </div>
@@ -157,10 +285,58 @@ $order_query = mysqli_query($conn, "
       </form>
    </section>
 
+   <!-- Complaint Modal -->
+<!-- Complaint Modal -->
+<div id="complainModal" class="modal">
+      <div class="modal-content">
+         <span class="close" onclick="closeModal()">&times;</span>
+         <h2>Submit Your Complaint</h2>
+         <form id="complainForm" method="post">
+            <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+            <label for="name">Name</label>
+            <input type="text" id="modalName" name="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="modalEmail" name="email" required>
+
+            <label for="number">Number</label>
+            <input type="text" id="modalNumber" name="number" required>
+
+            <label for="message">Message</label>
+            <textarea name="message" id="modalMessage" rows="4" required></textarea>
+
+            <button type="submit" name="submit_complaint">Submit</button>
+         </form>
+      </div>
+   </div>
+
+
+
    <?php include 'footer.php'; ?>
 
    <!-- Custom JS file link -->
    <script src="js/script.js"></script>
+   <script>
+      // Function to open modal and pre-fill the fields
+      function openModal(name, email, number) {
+         document.getElementById('modalName').value = name;
+         document.getElementById('modalEmail').value = email;
+         document.getElementById('modalNumber').value = number;
+         document.getElementById('complainModal').style.display = 'block';
+      }
+
+      // Function to close the modal
+      function closeModal() {
+         document.getElementById('complainModal').style.display = 'none';
+      }
+
+      // Close modal if the user clicks outside of the modal
+      window.onclick = function (event) {
+         if (event.target == document.getElementById('complainModal')) {
+            closeModal();
+         }
+      }
+   </script>
 
 </body>
 

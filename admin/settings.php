@@ -53,23 +53,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="openbtn" onclick="openNav();" style = "width:85px; border-radius:10px;"><i class="fa fa-gear" style="font-size:60px;"></i></button>
       </div>
 
-
+        
   <div class="wrapper container center-form">
-  <div class="col-md-6">
-   <h1 style="color:white;">Settings</h1>
-   <form method="post" action="" onsubmit="return validateSettingsForm()">
-      <div class="form-group">
-         <label for="adminname" style="color:white;">Admin Name:</label>
-         <input type="text" class="inp-box input form-control" id="adminname" name="adminname" required>
+    <div class="col-md-6">
+    <h1 style="color:white;">Settings</h1>
+    <form method="post" action="" onsubmit="return validateSettingsForm()">
+        <div class="form-group">
+          <label for="adminname" style="color:white;">Admin Name:</label>
+          <input type="text" class="inp-box input form-control" id="adminname" name="adminname" required>
+        </div>
+        <div class="form-group">
+          <label for="password" style="color:white;">Password:</label>
+          <input type="password" class="inp-box input form-control" id="password" name="password" required>
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-primary" onclick="location.href='dashboard.php'">Cancel</button>
+        </form>
       </div>
-      <div class="form-group">
-         <label for="password" style="color:white;">Password:</label>
-         <input type="password" class="inp-box input form-control" id="password" name="password" required>
-         <button type="submit" class="btn btn-primary">Update</button>
-        <button type="button" class="btn btn-primary" onclick="location.href='dashboard.php'">Cancel</button>
-      </form>
-    </div>
   </div>
+
+    <div class="footer">
+        <?php include 'adminfooter.php' ?>
+    </div>
 <script>
    function validateSettingsForm() {
       // Admin name validation: must not start with a number

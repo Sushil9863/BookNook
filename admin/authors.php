@@ -47,11 +47,10 @@ if(isset($_POST['add_author'])){
 
 if(isset($_POST['update_author'])){
 
-  $update_a_id = $_POST['update_a_id'];
   $update_name = $_POST['update_name'];
-  $update_price = $_POST['update_price'];
+  $update_image = $_POST['update_image'];
 
-  mysqli_query($conn, "UPDATE `authors` SET name = '$update_name' WHERE id = '$update_a_id'") or die('query failed');
+  mysqli_query($conn, "UPDATE `authors` SET name = '$update_name', image='$update_image' WHERE id = '$update_a_id'") or die('query failed');
 
   $update_image = $_FILES['update_image']['name'];
   $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
@@ -191,6 +190,14 @@ if(isset($_GET['delete'])){
   background-color: #218838;
   transform: scale(1.05);
 }
+.show-products .box-container .box {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    background-color: rgba(164, 162, 163, 0.59);
+}
   </style>
 </head>
 <body>
@@ -302,6 +309,22 @@ if(isset($_GET['delete'])){
    ?>
 
 </section>
+
+<script>
+   // Close the modal when clicking outside of it
+   window.onclick = function(event) {
+      var modal = document.querySelector('.edit-product-form');
+      if (event.target == modal) {
+         modal.style.display = "none";
+         location.href = 'authors.php'; // Redirect to avoid keeping modal open on page refresh
+      }
+   }
+</script>
+
+
+<?php
+include 'adminfooter.php'
+?>
     <!-- <script type="text/javascript" src="./assets/js/ajaxWork.js"></script>     -->
     <script type="text/javascript" src="assets/js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>

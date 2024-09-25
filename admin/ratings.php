@@ -212,7 +212,9 @@ if(isset($_GET['delete'])){
       }
    ?>
 </section>
-
+    <div class="footer">
+        <?php include 'adminfooter.php' ?>
+    </div>
 
     <!-- <script type="text/javascript" src="./assets/js/ajaxWork.js"></script>     -->
     <script type="text/javascript" src="assets/js/script.js"></script>
