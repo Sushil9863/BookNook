@@ -14,6 +14,7 @@ function generate_otp(){
         }
         return $otp;
 }
+
 function custom_hash($password) {
     $salt = 'abc123!@#'; 
     $hashed = '';

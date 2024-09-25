@@ -50,8 +50,9 @@ if(isset($_POST['update_product'])) {
   $update_price = $_POST['update_price'];
   $update_author_id = $_POST['update_author'];
   $update_stock = $_POST['update_stock'];
+  $update_genre = $_POST['update_genre'];
 
-  mysqli_query($conn, "UPDATE `products` SET name = '$update_name', price = '$update_price', author_id = '$update_author_id', stocks = '$update_stock' WHERE id = '$update_p_id'") or die('query failed');
+  mysqli_query($conn, "UPDATE `products` SET name = '$update_name', price = '$update_price', author_id = '$update_author_id', genre='$update_genre', stocks = '$update_stock' WHERE id = '$update_p_id'") or die('query failed');
 
   $update_image = $_FILES['update_image']['name'];
   $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
@@ -176,6 +177,14 @@ if(isset($_GET['delete'])) {
       background-color: #218838;
       transform: scale(1.05);
     }
+    .show-products .box-container .box {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    background-color: rgba(164, 162, 163, 0.59);
+}
   </style>
 </head>
 <body>
@@ -226,54 +235,41 @@ if(isset($_GET['delete'])) {
     </form>
 </section>
 
-<script>
-   function validateBookForm() {
-      // Validate the book name: must not start with a number and must end with a letter
-      const bookName = document.getElementById('book-name').value.trim();
-      const nameRegex = /^[^\d].*[a-zA-Z]$/; // Ensures the name doesn't start with a number and ends with a letter
-      if (!nameRegex.test(bookName)) {
-         alert("Book name must not start with a number and must end with a letter.");
-         return false;
-      }
-
-      // Validate the image file (only JPEG, JPG, or PNG files)
-      const imageInput = document.getElementById('book-image');
-      const imagePath = imageInput.value;
-      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; // Accepts .jpg, .jpeg, .png
-      
-      if (!allowedExtensions.exec(imagePath)) {
-         alert("Please upload a file with .png, .jpg, or .jpeg extension.");
-         imageInput.value = ''; // Clear the input field
-         return false;
-      }
-
-      return true; // If all validations pass
-   }
-</script>
 
 
-  <section class="show-products">
+
+<section class="show-products">
     <div class="box-container">
-      <?php
-      $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
-      if(mysqli_num_rows($select_products) > 0){
-        while($fetch_products = mysqli_fetch_assoc($select_products)){
-          ?>
-          <div class="box">
-            <img src="../uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
-            <div class="name"><?php echo $fetch_products['name']; ?></div>
-            <div class="price">Rs.<?php echo $fetch_products['price']; ?>/-</div>
-            <a href="books.php?update=<?php echo $fetch_products['id']; ?>" class="option-btn">update</a>
-            <a href="books.php?delete=<?php echo $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
-          </div>
-          <?php
+        <?php
+        // Modify the SQL query to join the products, authors, and genres tables
+        $select_products = mysqli_query($conn, 
+            "SELECT p.*, a.name AS author_name, g.name AS genre_name 
+             FROM products p 
+             JOIN authors a ON p.author_id = a.id 
+             JOIN genres g ON p.genre = g.id"
+        ) or die('query failed');
+        
+        if(mysqli_num_rows($select_products) > 0){
+            while($fetch_products = mysqli_fetch_assoc($select_products)){
+                ?>
+                <div class="box">
+                    <img src="../uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
+                    <div class="name"><?php echo $fetch_products['name']; ?></div>
+                    <div class="price">Rs.<?php echo $fetch_products['price']; ?>/-</div>
+                    <div class="name">Author: <?php echo $fetch_products['author_name']; ?></div> <!-- Display author name -->
+                    <div class="name">Genre: <?php echo $fetch_products['genre_name']; ?></div> <!-- Display genre name -->
+                    <a href="books.php?update=<?php echo $fetch_products['id']; ?>" class="option-btn">update</a>
+                    <a href="books.php?delete=<?php echo $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
+                </div>
+                <?php
+            }
+        } else {
+            echo '<p class="empty">No products added yet!</p>';
         }
-      } else {
-        echo '<p class="empty">No products added yet!</p>';
-      }
-      ?>
+        ?>
     </div>
-  </section>
+</section>
+
 
   <section class="edit-product-form">
     <?php
@@ -307,7 +303,7 @@ if(isset($_GET['delete'])) {
               $select_genres = mysqli_query($conn, "SELECT * FROM `genres`") or die('query failed');
               if(mysqli_num_rows($select_genres) > 0){
                 while($fetch_genres = mysqli_fetch_assoc($select_genres)){
-                  $selected_genres = ($fetch_genres['id'] == $fetch_update['genre_id']) ? 'selected' : '';
+                  $selected_genres = ($fetch_genres['id'] == $fetch_update['genre']) ? 'selected' : '';
                   echo '<option value="'.$fetch_genres['id'].'" '.$selected_genres.'>'.$fetch_genres['name'].'</option>';
                 }
               } else {
@@ -330,7 +326,41 @@ if(isset($_GET['delete'])) {
     ?>
 
   </section>
+  <div class="footer">
+                <?php include 'adminfooter.php' ?>
+            </div>
+  <script>
+   function validateBookForm() {
+      // Validate the book name: must not start with a number and must end with a letter
+      const bookName = document.getElementById('book-name').value.trim();
+      const nameRegex = /^[^\d].*[a-zA-Z]$/; // Ensures the name doesn't start with a number and ends with a letter
+      if (!nameRegex.test(bookName)) {
+         alert("Book name must not start with a number and must end with a letter.");
+         return false;
+      }
 
+      // Validate the image file (only JPEG, JPG, or PNG files)
+      const imageInput = document.getElementById('book-image');
+      const imagePath = imageInput.value;
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; // Accepts .jpg, .jpeg, .png
+      
+      if (!allowedExtensions.exec(imagePath)) {
+         alert("Please upload a file with .png, .jpg, or .jpeg extension.");
+         imageInput.value = ''; // Clear the input field
+         return false;
+      }
+
+      return true; // If all validations pass
+   }
+   // Close the modal when clicking outside of it
+   window.onclick = function(event) {
+      var modal = document.querySelector('.edit-product-form');
+      if (event.target == modal) {
+         modal.style.display = "none";
+         location.href = 'authors.php'; // Redirect to avoid keeping modal open on page refresh
+      }
+   }
+</script>
   <script type="text/javascript" src="assets/js/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>

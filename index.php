@@ -24,7 +24,7 @@ if (isset($_GET["data"])) {
            $lastId = $row['id'];
 
            // Update the last row
-           $newValue = 'Completed'; // Set the new value you want to update
+           $newValue = 'Completed';
            $updateSql = "UPDATE orders SET payment_status = '$newValue' WHERE id = $lastId";
 
            if ($conn->query($updateSql) === TRUE) {

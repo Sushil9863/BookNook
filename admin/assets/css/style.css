@@ -22,8 +22,21 @@
       margin: 10px;
       border-radius: 10px;
       box-shadow: 8px 5px 5px #390772;
-      /* box-shadow: 8px 5px 5px #dadde7; */
   }
+
+  .card-chart {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+    width: 100%; /* Full width for the container */
+    margin-bottom: 30px; /* Add margin at the bottom */
+}
+.card-chart canvas {
+    max-width: 50%; /* Set the chart to 50% width */
+    width: 100%; /* Make it responsive */
+    height: auto; /* Maintain aspect ratio */
+}
+
 
 /************************** for sidebar ***********************************/
 

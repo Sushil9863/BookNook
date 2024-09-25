@@ -202,7 +202,9 @@ if(isset($_GET['delete'])){
    ?>
 </div>
 </section>
-
+<div class="footer">
+                <?php include 'adminfooter.php' ?>
+            </div>
 <!-- JavaScript to Handle Reply Form Display and Email -->
 <script type="text/javascript">
   // Function to show the reply form
