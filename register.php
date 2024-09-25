@@ -1,7 +1,19 @@
-
 <?php
 // Include the database connection code
 require_once 'config.php';
+
+// Custom function to hash the password (weaker than password_hash)
+function custom_hash($password) {
+    // Define a static salt (insecure, but for educational purposes)
+    $salt = 'abc123!@#'; // You can generate a random salt and store it too
+
+    // A simple hash algorithm: concatenate password and salt, convert to a hex representation
+    $hashed = '';
+    for ($i = 0; $i < strlen($password); $i++) {
+        $hashed .= dechex(ord($password[$i]) + ord($salt[$i % strlen($salt)]));
+    }
+    return $hashed;
+}
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -38,12 +50,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>alert('$err');</script>";
         } else {
 
-            // Hash the password for security (you may use a stronger hashing method)
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // Custom hash the password (instead of password_hash)
+            $hashed_password = custom_hash($password);
 
-            
             // Prepare the SQL query to insert data into the table
-            $sql = "INSERT INTO user_details (username, email, contact_number, password,status) VALUES (?, ?, ?, ?,?)";
+            $sql = "INSERT INTO user_details (username, email, contact_number, password, status) VALUES (?, ?, ?, ?, ?)";
 
             // Prepare the statement
             $stmt = $conn->prepare($sql);
@@ -63,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Close the statement
             $stmt->close();
-        
         }
 
         // Close the check statement and database connection
@@ -88,7 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
             font-size: 14px;
             margin-top: 5px;
-
         }
     </style>
     <title>BookNook-Register</title>
@@ -155,9 +164,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <input type="submit" class="login-btn" value="Register Now" id="registerButton" disabled>
-
         </form>
     </div>
+
     <script type="module">
         // Function to validate the Username field
         function validateUsername(username) {
@@ -179,11 +188,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Function to validate the Password field
         function validatePassword(password) {
-        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-        return passwordRegex.test(password);
-    }
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            return passwordRegex.test(password);
+        }
 
-        // Function to perform real-time validation for each field on key press
+        // Real-time field validation
         $(document).ready(function() {
             $("#username").on("keyup", function() {
                 var username = $(this).val();
@@ -234,26 +243,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
 
-             // Enable the "Register Now" button only when all fields are valid
-    $("#registrationForm input").on("keyup", function() {
-        var username = $("#username").val();
-        var email = $("#email").val();
-        var number = $("#number").val();
-        var password = $("#password").val();
-        var cpassword = $("#cpassword").val();
+            // Enable the "Register Now" button only when all fields are valid
+            $("#registrationForm input").on("keyup", function() {
+                var username = $("#username").val();
+                var email = $("#email").val();
+                var number = $("#number").val();
+                var password = $("#password").val();
+                var cpassword = $("#cpassword").val();
 
-        if (
-            validateUsername(username) &&
-            validateEmail(email) &&
-            validatePhoneNumber(number) &&
-            validatePassword(password) &&
-            password === cpassword
-        ) {
-            $("#registerButton").prop("disabled", false);
-        } else {
-            $("#registerButton").prop("disabled", true);
-        }
-    });
+                if (
+                    validateUsername(username) &&
+                    validateEmail(email) &&
+                    validatePhoneNumber(number) &&
+                    validatePassword(password) &&
+                    password === cpassword
+                ) {
+                    $("#registerButton").prop("disabled", false);
+                } else {
+                    $("#registerButton").prop("disabled", true);
+                }
+            });
         });
     </script>
 </body>
