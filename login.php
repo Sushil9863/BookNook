@@ -1,5 +1,4 @@
 <?php
-//This script will handle login
 session_start();
 
 // check if the user is already logged in
@@ -10,9 +9,8 @@ if (isset($_SESSION['username'])) {
 
 require_once "config.php";
 
-// Custom function to hash the password (same as the one used in registration)
 function custom_hash($password) {
-    $salt = 'abc123!@#'; // Using the same static salt as in registration
+    $salt = 'abc123!@#';
     $hashed = '';
     for ($i = 0; $i < strlen($password); $i++) {
         $hashed .= dechex(ord($password[$i]) + ord($salt[$i % strlen($salt)]));

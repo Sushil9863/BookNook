@@ -57,7 +57,11 @@ if (isset($_POST['order_btn'])) {
     $payment_method = mysqli_real_escape_string($conn, $_POST['method']);
     $selected_items = mysqli_real_escape_string($conn, $_POST['selected_items']);
     $total_price = mysqli_real_escape_string($conn, $_POST['total_price']);
-    
+    echo $payment_method,$total_price;
+
+    if ($payment_method == "esewa") {
+        header('location:esewa.php?amount=' . $total_price);
+    }
     // Concatenate city and district to form the address
     $address = $city . ', ' . $district;
     

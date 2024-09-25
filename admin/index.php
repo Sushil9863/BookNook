@@ -122,12 +122,12 @@ if(empty($err))
         }
 
         // Password validation: must be at least 8 characters, contain one special character, and one capital letter
-        const password = document.getElementById('password').value.trim();
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-        if (!passwordRegex.test(password)) {
-            alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
-            return false;
-        }
+        // const password = document.getElementById('password').value.trim();
+        // const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+        // if (!passwordRegex.test(password)) {
+        //     alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+        //     return false;
+        // }
 
         return true; // If both validations pass
     }

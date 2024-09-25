@@ -1,54 +1,59 @@
 <?php
-// Include database connection file
-include 'config.php'; // Assumes you have a config file for DB connection
-// Include PHPMailer
+include 'config.php'; 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require 'vendor/autoload.php'; // For Composer
-// If using manual download, use: require 'path-to-your-phpmailer-folder/src/PHPMailer.php';
-// require 'path-to-your-phpmailer-folder/src/SMTP.php'; // For SMTP
-
+require 'vendor/autoload.php';
 session_start();
+
+function generate_otp(){
+        $otp = '';
+        $seed = time() * 98765;
+        for ($i = 0; $i < 6; $i++) {
+            $otp .= ($seed * ($i + 1)) % 10; 
+            $seed += 345; 
+        }
+}
+function custom_hash($password) {
+    $salt = 'abc123!@#'; 
+    $hashed = '';
+    for ($i = 0; $i < strlen($password); $i++) {
+        $hashed .= dechex(ord($password[$i]) + ord($salt[$i % strlen($salt)]));
+    }
+    return $hashed;
+}
 
 if (isset($_POST['email'])) {
     $email = $_POST['email'];
     
-    // Check if the email exists in the database
     $query = "SELECT * FROM user_details WHERE email='$email'";
     $result = mysqli_query($conn, $query);
     
     if (mysqli_num_rows($result) > 0) {
-        // Generate a 4-digit OTP
-        $otp = rand(1000, 9999);
-        
-        // Store the OTP in the session temporarily
+        $otp = generate_otp();
         $_SESSION['otp'] = $otp;
         $_SESSION['email'] = $email;
 
-        // Send OTP to the user's email using PHPMailer
         $mail = new PHPMailer(true);
         
         try {
-            // Server settings
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.gmail.com';                    // Specify main SMTP server (Gmail, for example, smtp.gmail.com)
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'book.nook986@gmail.com';           // SMTP username
-            $mail->Password = 'ftch pnwl ljse gffm';              // SMTP password
-            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 587;                                    // TCP port to connect to
+            $mail->isSMTP();                                      
+            $mail->Host = 'smtp.gmail.com';                    
+            $mail->SMTPAuth = true;                               
+            $mail->Username = 'book.nook986@gmail.com';           
+            $mail->Password = 'ftch pnwl ljse gffm';              
+            $mail->SMTPSecure = 'tls';                            
+            $mail->Port = 587;                                    
 
-            // Recipients
+            
             $mail->setFrom('noreply@BookNook.com', 'BookNook');
-            $mail->addAddress($email);                            // Add recipient email
+            $mail->addAddress($email);                            
 
-            // Content
-            $mail->isHTML(true);                                  // Set email format to HTML
+            
+            $mail->isHTML(true);                                  
             $mail->Subject = 'Password Reset OTP';
             $mail->Body    = "Your OTP for password reset is: <strong>$otp</strong>";
 
-            // Send the email
+            
             $mail->send();
 
             echo "<script>
@@ -63,14 +68,11 @@ if (isset($_POST['email'])) {
     }
 }
 
-// Verification and reset password logic continues here...
 
 if (isset($_POST['otp_verify'])) {
     $otp_input = $_POST['otp'];
     
-    // Check if the OTP matches
     if ($_SESSION['otp'] == $otp_input) {
-        // Redirect to password reset page
         echo "<script>
             alert('OTP verified successfully.');
             window.location.href = 'forgot-password.php?step=reset';
@@ -83,13 +85,11 @@ if (isset($_POST['otp_verify'])) {
 if (isset($_POST['reset_password'])) {
     $new_password = $_POST['new_password'];
     $email = $_SESSION['email'];
-    
-    // Update the password in the database (make sure to hash it)
-    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+    $hashed_password = custom_hash($new_password);
     $updateQuery = "UPDATE user_details SET password='$hashed_password' WHERE email='$email'";
     mysqli_query($conn, $updateQuery);
     
-    // Clear session variables
     unset($_SESSION['otp']);
     unset($_SESSION['email']);
     
@@ -135,13 +135,15 @@ if (isset($_POST['reset_password'])) {
         .input {
             background-color: #333;
             color: #fff;
-            width: 100%;
+            width: 85%;
             padding: 10px;
             outline: 0;
             border: 1px solid rgba(105, 105, 105, 0.397);
             border-radius: 10px;
         }
         .submit {
+            align-self:center;
+            width: 50%;
             border: none;
             padding: 10px;
             border-radius: 10px;
@@ -161,7 +163,7 @@ if (isset($_POST['reset_password'])) {
     // Step 1: Enter Email
     if (!isset($_GET['step'])) {
     ?>
-        <p class="title">Forgot Password</p>
+        <p class="title">Forgot Password?</p>
         <p class="message">Enter your registered Email</p>
         <label>
             <input class="input" type="email" name="email" id="email" placeholder="Enter Email" required>

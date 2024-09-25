@@ -1,9 +1,42 @@
 <?php
 
-include 'config.php';
-error_reporting(0);
-session_start();
 
+
+include 'config.php';
+session_start();
+error_reporting(0);
+
+
+
+// For status check
+if (isset($_GET["data"])) {
+   $response_encoded = $_GET["data"];
+   $response = json_decode(base64_decode($response_encoded), true);
+
+   $status = $response["status"];
+   if ($status == "COMPLETE") {
+       $sql = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+       $result = $conn->query($sql);
+
+       if ($result->num_rows > 0) {
+           // Fetch the last row id
+           $row = $result->fetch_assoc();
+           $lastId = $row['id'];
+
+           // Update the last row
+           $newValue = 'Completed'; // Set the new value you want to update
+           $updateSql = "UPDATE orders SET payment_status = '$newValue' WHERE id = $lastId";
+
+           if ($conn->query($updateSql) === TRUE) {
+               $message[]= "Record updated successfully";
+           } else {
+               echo "Error updating record: " . $conn->error;
+           }
+       } else {
+           echo "No rows found";
+       }
+   }
+}
 
 
 // if(!isset($user_id)){

@@ -1,13 +1,7 @@
 <?php
-// Include the database connection code
 require_once 'config.php';
-
-// Custom function to hash the password (weaker than password_hash)
 function custom_hash($password) {
-    // Define a static salt (insecure, but for educational purposes)
-    $salt = 'abc123!@#'; // You can generate a random salt and store it too
-
-    // A simple hash algorithm: concatenate password and salt, convert to a hex representation
+    $salt = 'abc123!@#'; 
     $hashed = '';
     for ($i = 0; $i < strlen($password); $i++) {
         $hashed .= dechex(ord($password[$i]) + ord($salt[$i % strlen($salt)]));
@@ -15,9 +9,7 @@ function custom_hash($password) {
     return $hashed;
 }
 
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the form data
     $username = $_POST['username'];
     $email = $_POST['email'];
     $number = $_POST['number'];
@@ -25,31 +17,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirm_password = $_POST['confirm_password'];
     $status = "Active";
 
-    // Perform basic validation
-    if (empty($username) || empty($email) || empty($number) || empty($password) || empty($confirm_password)) {
-        // Handle empty fields
+    if (empty($username) || empty($email) || empty($number) || empty($password) || empty($confirm_password)) {    
         $err = "Please fill all the details.";
         echo "<script>alert('$err');</script>";
     } elseif ($password !== $confirm_password) {
-        // Handle password mismatch
         $err = "Passwords do not match.";
         echo "<script>alert('$err');</script>";
     } else {
-        // All data is valid, proceed with database insertion
-
-        // Check if the username already exists in the database
         $check_sql = "SELECT * FROM user_details WHERE username = ?";
         $check_stmt = $conn->prepare($check_sql);
         $check_stmt->bind_param("s", $username);
         $check_stmt->execute();
         $result = $check_stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            // Username already exists
-            $err = "Username already exists. Choose a different one.";
-            echo "<script>alert('$err');</script>";
-        } else {
+        // Check if the username or email already exists
+$check_sql = "SELECT * FROM user_details WHERE username = ? OR email = ?";
+$check_stmt = $conn->prepare($check_sql);
+$check_stmt->bind_param("ss", $username, $email);
+$check_stmt->execute();
+$result = $check_stmt->get_result();
 
+            if ($result->num_rows > 0) {
+                $err = "User already registered with this email or username. Choose a different one.";
+                echo "<script>alert('$err');</script>";
+            } else {
             // Custom hash the password (instead of password_hash)
             $hashed_password = custom_hash($password);
 
