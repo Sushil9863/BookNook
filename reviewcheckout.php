@@ -59,9 +59,7 @@ if (isset($_POST['order_btn'])) {
     $total_price = mysqli_real_escape_string($conn, $_POST['total_price']);
     echo $payment_method,$total_price;
 
-    if ($payment_method == "esewa") {
-        header('location:esewa.php?amount=' . $total_price);
-    }
+    
     // Concatenate city and district to form the address
     $address = $city . ', ' . $district;
     
@@ -69,10 +67,15 @@ if (isset($_POST['order_btn'])) {
     $place_order = mysqli_query($conn, "INSERT INTO `orders`(user_id, placed_on, name, number, email, address, method, total_products, total_price, payment_status) VALUES('$user_id', NOW(), '$name', '$phone', '$email', '$address', '$payment_method', '$selected_items', '$total_price', 'Pending')") or die('query failed');
     
     if ($place_order) {
-        // Redirect or show success message
-        echo '<script>alert("Your order has been placed successfully!");</script>';
-        header('location:orders.php'); // Redirect to orders page after placing the order
-        exit();
+        if ($payment_method == "esewa") {
+            header('location:esewa.php?amount=' . $total_price);
+        }
+        else{
+            // Redirect or show success message
+            echo '<script>alert("Your order has been placed successfully!");</script>';
+            header('location:orders.php'); // Redirect to orders page after placing the order
+            exit();
+        }
     } else {
         echo '<script>alert("Failed to place the order.");</script>';
     }

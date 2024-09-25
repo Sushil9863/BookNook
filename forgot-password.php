@@ -12,6 +12,7 @@ function generate_otp(){
             $otp .= ($seed * ($i + 1)) % 10; 
             $seed += 345; 
         }
+        return $otp;
 }
 function custom_hash($password) {
     $salt = 'abc123!@#'; 
