@@ -263,13 +263,16 @@ if (isset($_POST['submit_complaint'])) {
                      <button class="delete-btn" onclick="openModal('<?php echo $fetch_orders['name']; ?>', '<?php echo $fetch_orders['email']; ?>', '<?php echo $fetch_orders['number']; ?>')">Complain</button>
                   </div>
                </div>
-         <?php
+               <?php
             }
          } else {
             echo '<p class="empty">No orders placed yet!</p>';
          }
          ?>
       </div>
+      <form method="post" action="" onsubmit="return confirm('Are you sure you want to clear your entire orders?');">
+         <button type="submit" name="delete_all" style="margin-left:45%;" class="delete-btn">Delete All Orders</button>
+      </form>
    </section>
 
    <!-- Modal HTML -->

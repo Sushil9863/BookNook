@@ -92,7 +92,7 @@ if (isset($_POST['submit_complaint'])) {
       .clear-history-btn {
          margin-left: 45%;
          margin-top: 20px;
-         background-color: #ff6b6b;
+         background-color: red;
          padding: 12px 25px;
          cursor: pointer;
          color: white;
