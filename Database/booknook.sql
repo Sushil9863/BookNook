@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 20, 2024 at 12:09 PM
+-- Generation Time: Oct 13, 2024 at 05:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,7 +64,8 @@ INSERT INTO `authors` (`id`, `name`, `image`) VALUES
 (6, 'Diamond Shumsher Rana', 'Diamond Shumsher.png'),
 (7, 'Saru Bhakta', 'Saru Bhakta.png'),
 (8, 'Amar Neupane', 'Amar Neupane.png'),
-(9, 'Laxmi Prasad Devkota', 'Laxmi Prasad Devkota.png');
+(9, 'Laxmi Prasad Devkota', 'Laxmi Prasad Devkota.png'),
+(11, 'Sanu Sharma', 'Sanu Sharma.png');
 
 -- --------------------------------------------------------
 
@@ -81,14 +82,28 @@ CREATE TABLE `cart` (
   `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `cart`
+-- Table structure for table `favorites`
 --
 
-INSERT INTO `cart` (`id`, `user_id`, `name`, `price`, `quantity`, `image`) VALUES
-(1, 0, 'Bash and Lucy', '50', 1, 'bash_and_lucy-2.jpg'),
-(2, 5, 'Bash and Lucy', '50', 1, 'bash_and_lucy-2.jpg'),
-(7, 1, 'Karodau Kasturi', '250', 1, 'karodau_kasturi.jpg');
+CREATE TABLE `favorites` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `favorites`
+--
+
+INSERT INTO `favorites` (`id`, `user_id`, `product_id`) VALUES
+(7, 6, 6),
+(9, 1, 6),
+(10, 1, 9),
+(11, 6, 11),
+(23, 0, 4);
 
 -- --------------------------------------------------------
 
@@ -133,7 +148,8 @@ CREATE TABLE `message` (
 --
 
 INSERT INTO `message` (`id`, `user_id`, `name`, `email`, `number`, `message`) VALUES
-(3, 1, 'Sushil Lamichhane', 'lamichhanesushil56@gmail.com', '9886379409', 'msg');
+(6, 1, 'Sushil Lamichhane', 'khatiwadanischal2015@gmail.com', '9898989898', 'ghxkcgsd'),
+(7, 1, 'Sushil Lamichhane', 'lamichhanesushil56@gmail.com', '9886379409', 'this order is not received\r\n');
 
 -- --------------------------------------------------------
 
@@ -154,6 +170,17 @@ CREATE TABLE `orders` (
   `total_price` varchar(255) NOT NULL,
   `payment_status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `placed_on`, `name`, `number`, `email`, `address`, `method`, `total_products`, `total_price`, `payment_status`) VALUES
+(1, 1, '23-Sep-2024', 'Sushil Lamichhane', '9886379409', 'lamichhanesushil56@gmail.com', '  Bhorle, Rasuwa', 'esewa', 'Seto Baagh (1) ', '1200', 'Completed'),
+(2, 1, '24-Sep-2024', 'Sushil Lamichhane', '9863794096', 'lamichhanesushil56@gmail.com', '  Maitighar, Kathmandu', 'esewa', 'Palpasa cafe (1) ', '1450', 'Completed'),
+(11, 1, '30-Sep-2024', 'Sushil Lamichhane', '9886379409', 'lamichhanesushil56@gmail.com', '  Bharta, Makwanpur', 'cash on delivery', 'China Harayeko Manchhe (1) ', '550', 'Completed'),
+(16, 1, '05-Oct-2024', 'Sushil Lamichhane', '9886379409', 'lamichhanesushil56@gmail.com', '  Syafru Besi, Rasuwa', 'cash on delivery', 'Muna Madan (1) ', '200', 'Completed'),
+(17, 6, '08-Oct-2024', 'Sushil Lamichhane', '9886379409', 'lamichhanesushil56@gmail.com', '  Khairahani, Chitwan', 'esewa', 'Bash and Lucy (1) ', '150', 'Completed');
 
 -- --------------------------------------------------------
 
@@ -176,13 +203,15 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `genre`, `price`, `author_id`, `image`, `stocks`) VALUES
-(4, 'China Harayeko Manxe', '4', '550', 3, 'china_harayeko_manxe.jpg', '150'),
-(6, 'Maha ko Ma', '4', '150', 3, 'maha ko ma.png', '150'),
-(7, 'Palpasa cafe', '5', '750', 4, 'Palpasa Cafe.png', '120'),
-(8, 'Pagal Basti', '7', '450', 7, 'Pagal Basti.png', '200'),
+(4, 'China Harayeko Manchhe', '4', '550', 2, 'china_harayeko_manxe.jpg', '10'),
+(6, 'Maha ko Ma', '4', '550', 3, 'maha ko ma.png', '10'),
+(7, 'Palpasa cafe', '7', '750', 4, 'Palpasa Cafe.png', '149'),
 (9, 'Seto Baagh', '8', '1200', 6, 'Seto Baagh.png', '20'),
 (10, 'Seto Dharti', '7', '1500', 8, 'Seto Dharti.png', '450'),
-(11, 'Muna Madan', '9', '200', 9, 'Muna Madan.png', '450');
+(11, 'Muna Madan', '9', '200', 9, 'Muna Madan.png', '448'),
+(13, 'Pagal Basti', '7', '1234', 7, 'Pagal Basti.png', '225'),
+(15, 'Eka Deshma', '7', '170', 11, 'Ekadeshma.png', '1200'),
+(16, 'Bash and Lucy', '7', '150', 7, 'Palpasa Cafe.png', '49');
 
 -- --------------------------------------------------------
 
@@ -204,7 +233,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `user_id`, `user_name`, `review_text`, `rating`, `review_image`) VALUES
-(1, 6, 'sushil', 'This is one of the best websites', 5, '');
+(1, 6, 'sushil', 'This is one of the best websites', 5, ''),
+(2, 1, 'Guest', 'done', 4, '');
 
 -- --------------------------------------------------------
 
@@ -226,8 +256,7 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`id`, `username`, `email`, `contact_number`, `password`, `Status`) VALUES
-(4, 'gauri', 'gauri@gaurav.com', '9785654210', '$2y$10$r34QaQETDETrtVGNAH3XrOZArSPVQkUeS9stJESoQbO82J2NyQiRG', 'Active'),
-(6, 'sushil', 'lamichhanesushil56@gmail.com', '9886379409', '$2y$10$aceYp8rMpTpfl9dplJu47.7QSUAcPBLC86WMKMTh3f2ZP1FSX5Hte', 'Active');
+(6, 'sushil', 'lamichhanesushil56@gmail.com', '9886379409', 'b1c3d6a4a96393a4', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -249,6 +278,12 @@ ALTER TABLE `authors`
 -- Indexes for table `cart`
 --
 ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `favorites`
+--
+ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -301,49 +336,55 @@ ALTER TABLE `admin_detail`
 -- AUTO_INCREMENT for table `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `favorites`
+--
+ALTER TABLE `favorites`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
