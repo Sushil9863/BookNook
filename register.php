@@ -90,6 +90,98 @@ $result = $check_stmt->get_result();
             font-size: 14px;
             margin-top: 5px;
         }
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #b0c4de, #1e3c72);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%; /* Full height of the viewport */
+}
+
+.register-form-container {
+    background-color: #1e73be;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 320px;
+    text-align: center;
+}
+
+.register-form-container h2 {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.register-form-container label {
+    display: block;
+    text-align: left;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.register-form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #5f9ea0;
+    background-color: #4b59c1;
+    color: white;
+}
+
+.register-form-container input::placeholder {
+    color: #bbb;
+}
+
+.register-form-container .register-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0c14b;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-form-container .register-btn:hover {
+    background-color: #ddb347;
+}
+
+.register-form-container p {
+    color: #fff;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.register-form-container a {
+    color: #f0c14b;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-form-container a:hover {
+    text-decoration: underline;
+}
+
     </style>
     <title>BookNook-Register</title>
 </head>

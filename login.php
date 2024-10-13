@@ -56,22 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             header("location: index.php");
                         } else {
                             $err = "Username and password do not match.";
-                            echo "<script>alert('$err');</script>";
                         }
                     } else {
                         $err = "Your account is blocked due to some activity.";
-                        echo "<script>alert('$err');</script>";
                     }
                 }
             } else {
                 $err = "This user is not registered.";
-                echo "<script>alert('$err');</script>";
             }
         }
     }
 }
 ?>
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,62 +77,143 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <title>BookNook-Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        .forgot-password {
-            text-align: center;
-            margin-top: 15px;
-        }
+        <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        .forgot-password a {
-            color: black;
-            text-decoration: none;
-            font-size: 14px;
-        }
+    body, html {
+        height: 100%;
+        font-family: Arial, sans-serif;
+    }
 
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to bottom, #b0e0ff, #5f9ea0); /* Lighter blue gradient background */
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%; /* Full height */
+    }
+
+    .login-form-container {
+        background-color: #1e73be;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        width: 320px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth hover */
+    }
+
+    .login-form-container:hover {
+        transform: translateY(-10px); /* Lift effect on hover */
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* More shadow for hover effect */
+    }
+
+    .login-form-container h2 {
+        margin-bottom: 20px;
+        color: #fff;
+    }
+
+    .login-form-container label {
+        display: block;
+        text-align: left;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .login-form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #5f9ea0;
+        background-color: #4b59c1;
+        color: white;
+    }
+
+    .login-form-container input::placeholder {
+        color: #bbb;
+    }
+
+    .login-form-container .login-btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0c14b;
+        color: #333;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .login-form-container .login-btn:hover {
+        background-color: #ddb347;
+    }
+
+    .login-form-container p {
+        color: #fff;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .login-form-container a {
+        color: #f0c14b;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .login-form-container a:hover {
+        text-decoration: underline;
+    }
+
+    /* Error message styling */
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 20px;
+        display: none; /* Initially hidden */
+    }
+
+    .error-message.visible {
+        display: block;
+    }
+</style>
+
     </style>
+    <title>Login</title>
 </head>
 <body>
-    <div class="wrapper-right">
-        <div class="signup">
-            <p>Do not have an account?</p>
-            <button class="signup-btn" onclick="location.href='register.php'">Sign Up</button>
-            &nbsp;&nbsp;
-            <div class="back">
-                <a href="index.php"><i class="fas fa-times"></i></a>
-            </div>
+    <div class="login-form-container">
+        <h2>Login</h2>
+
+        <!-- Error message placeholder -->
+        <div class="error-message <?php echo !empty($err) ? 'visible' : ''; ?>">
+            <?php echo $err; ?>
         </div>
 
-        <div class="title">
-            <h1>Welcome Back,</h1>
-            <p>Sign In to your account</p>
-        </div>
-        <form action="" method="post">
-            <div class="form-card">
-                <span class="label">Username</span>
-                <div class="input-box">
-                    <input type="text" id="username" name="username" placeholder="Username">
-                    <ion-icon name="person-outline"></ion-icon>
-                </div>
-            </div>
-            <div class="form-card">
-                <span class="label">Password</span>
-                <div class="input-box">
-                    <input type="password" name="password" id="password" placeholder="Password">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                </div>
-                <div class="forgot-password">
-                    <a href="forgot-password.php">Forgot Password?</a>
-                </div>
-            </div>
-            <input type="submit" value="Login" class="login-btn">
+        <form action="login.php" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+
+            <button type="submit" class="login-btn">Login Now</button>
         </form>
+
+        <p>Don't have an account? <a href="register.php">Sign Up</a></p>
     </div>
 </body>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </html>
