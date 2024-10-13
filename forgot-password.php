@@ -59,7 +59,7 @@ if (isset($_POST['email'])) {
             $mail->send();
 
             echo "<script>
-                alert('A 4-digit OTP has been sent to your email.');
+                alert('A 6-digit OTP has been sent to your email.');
                 window.location.href = 'forgot-password.php?step=verify';
             </script>";
         } catch (Exception $e) {
